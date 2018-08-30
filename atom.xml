@@ -1,0 +1,601 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+ <title>行胜于言</title>
+ <link href="/atom.xml" rel="self"/>
+ <link href=""/>
+ <updated>2018-08-30T23:54:57+08:00</updated>
+ <id></id>
+ <author>
+   <name>xiabo2011</name>
+   <email></email>
+ </author>
+
+ 
+ <entry>
+   <title>Zookeeper API使用</title>
+   <link href="/distributed/2018/08/26/zookeeper-api/"/>
+   <updated>2018-08-26T08:01:01+08:00</updated>
+   <id>/distributed/2018/08/26/zookeeper-api</id>
+   <content type="html">&lt;h2 id=&quot;zookeeper-session&quot;&gt;Zookeeper session&lt;/h2&gt;
+&lt;p&gt;通过org.apache.zookeeper.Zookeeper类构建zookeeper session&lt;/p&gt;
+&lt;div class=&quot;language-java highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;Zookeeper&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;connectString&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;   &lt;span class=&quot;c1&quot;&gt;// servers address e.g.: &quot;127.0.0.1:2181,127.0.0.1:2182,127.0.0.1:2183&quot;&lt;/span&gt;
+    &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sessionTimeout&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;     &lt;span class=&quot;c1&quot;&gt;// session timeout in millisecond&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;Watcher&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;watcher&lt;/span&gt;         &lt;span class=&quot;c1&quot;&gt;// 用来接收session event, watcher是接口，需要传递一个实现接口的实例化object&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;为了能够接收zookeeper的通知，需要实现Watcher类，代码如下&lt;/p&gt;
+&lt;div class=&quot;language-java highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Master&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;implements&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Watcher&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ZooKeeper&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;zk&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;hostPort&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;volatile&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;boolean&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;connected&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;volatile&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;boolean&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;expired&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+    
+    &lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;startZK&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;throws&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;IOException&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;zk&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ZooKeeper&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;hostPort&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;10000&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+    
+    &lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;stopZK&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;throws&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;InterruptedException&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;zk&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;close&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+    
+    &lt;span class=&quot;nd&quot;&gt;@Override&lt;/span&gt;
+    &lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;process&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;WatchedEvent&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;e&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;logger&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;info&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Master processing event: {}&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;e&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;toString&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;());&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;e&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;getType&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Event&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;EventType&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;None&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;k&quot;&gt;switch&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;e&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;getState&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;())&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+                &lt;span class=&quot;k&quot;&gt;case&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;SyncConnected:&lt;/span&gt;
+                    &lt;span class=&quot;n&quot;&gt;connected&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+                    &lt;span class=&quot;k&quot;&gt;break&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+                &lt;span class=&quot;k&quot;&gt;case&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;Disconnected:&lt;/span&gt;
+                    &lt;span class=&quot;n&quot;&gt;connected&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+                    &lt;span class=&quot;k&quot;&gt;break&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+                &lt;span class=&quot;k&quot;&gt;case&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;Expired:&lt;/span&gt;
+                    &lt;span class=&quot;n&quot;&gt;expired&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+                    &lt;span class=&quot;n&quot;&gt;connected&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+                    &lt;span class=&quot;n&quot;&gt;logger&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;error&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Session expiration&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+                &lt;span class=&quot;k&quot;&gt;default&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;
+                    &lt;span class=&quot;k&quot;&gt;break&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+            &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+        &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+    &lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;boolean&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;isConnected&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;connected&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+    &lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;boolean&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;isExpired&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;expired&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;WatchEvent包含3个属性，1) EventType, 2) KeeperStatus, 3) path&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;EventType取值包括NodeCreated, NodeDeleted, NodeDataChanged, NodeChildrenChanged, or None；
+None表示WatchEvent用来记录zk session的状态变化&lt;/li&gt;
+  &lt;li&gt;KeeperStatus在EventType为None时，表示path节点状态，取值包括Disconnected, SyncConnec ted, AuthFailed, ConnectedReadOnly, SaslAuthenticated, or Expired&lt;/li&gt;
+  &lt;li&gt;path表示在EventType非None时的znode path&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;zookeeper的api&quot;&gt;Zookeeper的API&lt;/h2&gt;
+&lt;p&gt;Zookeeper支持的API包括&lt;strong&gt;&lt;em&gt;create&lt;/em&gt;&lt;/strong&gt;, &lt;strong&gt;&lt;em&gt;exists&lt;/em&gt;&lt;/strong&gt;, &lt;strong&gt;&lt;em&gt;getData&lt;/em&gt;&lt;/strong&gt;, &lt;strong&gt;&lt;em&gt;setData&lt;/em&gt;&lt;/strong&gt;, &lt;strong&gt;&lt;em&gt;getChildren&lt;/em&gt;&lt;/strong&gt;, &lt;strong&gt;&lt;em&gt;delete&lt;/em&gt;&lt;/strong&gt;。
+每个API都支持同步调用和异步调用。异步调用的接口增加了callback接口参数，调用方需要实现相应的callback接口，来处理函数调用产生的各种状态码。
+下面是 &lt;em&gt;/master&lt;/em&gt; znode创建的代码举例。&lt;/p&gt;
+
+&lt;p&gt;同步调用&lt;strong&gt;&lt;em&gt;create&lt;/em&gt;&lt;/strong&gt;&lt;/p&gt;
+&lt;div class=&quot;language-java highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    &lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;boolean&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;checkMaster&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;throws&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;InterruptedException&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;c1&quot;&gt;// Logic for checking /master created correctly&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+    &lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;createMaster&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;throws&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;InterruptedException&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;while&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kc&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;k&quot;&gt;try&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+                &lt;span class=&quot;n&quot;&gt;zk&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;create&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;/master&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;masterData&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;getBytes&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(),&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ZooDefs&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;Ids&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;OPEN_ACL_UNSAFE&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;CreateMode&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;EPHEMERAL&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+                &lt;span class=&quot;n&quot;&gt;isLeader&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+                &lt;span class=&quot;k&quot;&gt;break&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+            &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;catch&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;KeeperException&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;NodeExistsException&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;e&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+                &lt;span class=&quot;n&quot;&gt;isLeader&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+                &lt;span class=&quot;k&quot;&gt;break&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+            &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;catch&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;KeeperException&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;e&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+                &lt;span class=&quot;n&quot;&gt;e&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;printStackTrace&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;
+            &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+            &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;checkMaster&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;())&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+                &lt;span class=&quot;k&quot;&gt;break&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+            &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+        &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;异步调用&lt;strong&gt;&lt;em&gt;create&lt;/em&gt;&lt;/strong&gt;&lt;/p&gt;
+&lt;div class=&quot;language-java highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    &lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;createMasterAsync&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;zk&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;create&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;/master&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;masterData&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;getBytes&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(),&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ZooDefs&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;Ids&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;OPEN_ACL_UNSAFE&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;CreateMode&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;EPHEMERAL&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;masterCreateCallback&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;null&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+    &lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;AsyncCallback&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;StringCallback&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;masterCreateCallback&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;AsyncCallback&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;StringCallback&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;nd&quot;&gt;@Override&lt;/span&gt;
+        &lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;processResult&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;rc&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;path&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Object&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ctx&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;k&quot;&gt;switch&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;KeeperException&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;Code&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;get&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;rc&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+                &lt;span class=&quot;k&quot;&gt;case&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;OK:&lt;/span&gt;
+                    &lt;span class=&quot;n&quot;&gt;status&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Status&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;ELECTED&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+                    &lt;span class=&quot;n&quot;&gt;takeLeadership&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;
+                    &lt;span class=&quot;n&quot;&gt;logger&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;info&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;I'm the leader&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+                    &lt;span class=&quot;k&quot;&gt;break&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+                &lt;span class=&quot;k&quot;&gt;case&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;NODEEXISTS:&lt;/span&gt;
+                    &lt;span class=&quot;n&quot;&gt;status&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Status&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;NOT_ELECTED&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+                    &lt;span class=&quot;n&quot;&gt;masterExistsAsync&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;
+                    &lt;span class=&quot;k&quot;&gt;break&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+                &lt;span class=&quot;k&quot;&gt;case&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;CONNECTIONLOSS:&lt;/span&gt;
+                    &lt;span class=&quot;n&quot;&gt;logger&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;warn&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Connection Loss&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+                    &lt;span class=&quot;n&quot;&gt;checkMasterAsync&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;
+                    &lt;span class=&quot;k&quot;&gt;break&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+                &lt;span class=&quot;k&quot;&gt;default&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;
+                    &lt;span class=&quot;n&quot;&gt;status&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Status&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;NOT_ELECTED&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+                    &lt;span class=&quot;n&quot;&gt;logger&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;error&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;'create' failed&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;KeeperException&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;create&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;KeeperException&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;Code&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;get&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;rc&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;),&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;path&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;));&lt;/span&gt;
+            &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+        &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;};&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;一般推荐使用异步API，因为它无需等待同步的create操作完成，线程不会阻塞，不用关心InterruptedException&lt;/p&gt;
+
+&lt;h2 id=&quot;处理znode状态改变&quot;&gt;处理znode状态改变&lt;/h2&gt;
+&lt;p&gt;对于Zookeeper API的调用，调用方一般遵循固定的pattern&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;调用API异步方法&lt;/li&gt;
+  &lt;li&gt;实现callback object，作为参数传给异步API方法&lt;/li&gt;
+  &lt;li&gt;如果方法需要提供Watcher参数，实现一个Watcher传递给异步API方法&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;代码举例：&lt;/p&gt;
+&lt;div class=&quot;language-java highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    &lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;masterExistsAsnyc&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;zk&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;exists&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;/master&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;masterExistsWatcher&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;masterExistsCallback&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;null&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+    &lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Watcher&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;masterExistsWatcher&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Watcher&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;nd&quot;&gt;@Override&lt;/span&gt;
+        &lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;process&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;WatchedEvent&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;event&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;event&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;getType&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Event&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;EventType&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;NodeDeleted&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+                &lt;span class=&quot;k&quot;&gt;assert&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;/master&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;equals&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;event&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;getPath&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;());&lt;/span&gt;
+                &lt;span class=&quot;n&quot;&gt;createMasterAsync&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;
+            &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+        &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;};&lt;/span&gt;
+
+    &lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;AsyncCallback&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;StatCallback&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;masterExistsCallback&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;AsyncCallback&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;StatCallback&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;nd&quot;&gt;@Override&lt;/span&gt;
+        &lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;processResult&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;rc&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;path&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Object&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ctx&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Stat&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;stat&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;k&quot;&gt;switch&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;KeeperException&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;Code&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;get&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;rc&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+                &lt;span class=&quot;k&quot;&gt;case&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;OK:&lt;/span&gt;
+                    &lt;span class=&quot;n&quot;&gt;looger&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;info&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;
+                    break;
+                case CONNECTIONLOSS:
+                    logger.warn(&quot;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Connection&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Loss&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;);
+                    masterExistsA();
+                    break;
+                case NONODE:
+                    createMasterAsync();
+                    logger.warn(&quot;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Previous&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;master&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;is&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;gone&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;run&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;master&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+                &lt;span class=&quot;k&quot;&gt;default&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;
+                    &lt;span class=&quot;n&quot;&gt;checkMasterAsync&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;
+                    &lt;span class=&quot;k&quot;&gt;break&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+            &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+        &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;};&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>在本地私链上运行智能合约</title>
+   <link href="/blockchain/2018/06/30/first-smart-contract/"/>
+   <updated>2018-06-30T08:01:01+08:00</updated>
+   <id>/blockchain/2018/06/30/first-smart-contract</id>
+   <content type="html">&lt;h2 id=&quot;准备工作&quot;&gt;准备工作&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;根据上一篇blog搭建私链&lt;/li&gt;
+  &lt;li&gt;下载 &lt;a href=&quot;https://github.com/ethereum/remix-ide/tree/gh-pages&quot;&gt;remix-ide&lt;/a&gt;，我们这里要下载&lt;em&gt;gh-pages&lt;/em&gt;分支，该分支为最新的稳定的build。remix-ide是一个用来编译运行智能合约的ide工具&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;启动私链节点&quot;&gt;启动私链节点&lt;/h2&gt;
+&lt;p&gt;相比于上一篇blog提到的启动命令，这里加入rpc相关的参数&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ geth --datadir &quot;$ethereum_home/eth2&quot; --port 30304 --nodiscover --networkid 1234 --rpcport 8545 --rpccorsdomain &quot;*&quot; --unlock 0 console 2&amp;gt;&amp;gt;eth2.log
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;”–unlock 0”表示要求unlock eth.accounts[0]，在提示输入Passphrase后就会解锁eth.accounts[0]&lt;/p&gt;
+
+&lt;h2 id=&quot;配置remix-ide&quot;&gt;配置remix-ide&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;Run-&amp;gt;Environment: Web3 Provider&lt;/li&gt;
+  &lt;li&gt;Web3 Provider Endpoint: http://localhost:8545&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;新建一个solidity源文件&quot;&gt;新建一个solidity源文件&lt;/h2&gt;
+&lt;p&gt;simple.sol&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&quot;language-solidity&quot;&gt;pragma solidity ^0.4.0;
+
+contract Adder {
+    string name;
+    
+    function setName(string _name) public {
+        name = _name;
+    }
+    
+    function getnName() public constant returns (string) {
+        return name;
+    }
+    
+    function add(int a, int b) public constant returns (int) {
+        return a + b;
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;点击ide上的&lt;strong&gt;create&lt;/strong&gt;按钮，如果上面geth命令没有带上”–unlock 0”就会看到”creation of Adder errored”，需要我们unlock Account。
+否则会看到”creation of Adder pending…“字样&lt;/p&gt;
+
+&lt;p&gt;&lt;img height=&quot;220&quot; src=&quot;/images/blockchain1.png&quot; /&gt;
+如上图所示我们看到”1 pending transactions”，这是因为是一个transaction，需要写入区块链才能生效，所以我们需要开启挖矿miner.start()，
+执行之后，我们会看到如下图所示结果
+&lt;img height=&quot;220&quot; src=&quot;/images/blockchain2.png&quot; /&gt;
+从图中我们可以看出，remix-ide中会把需要tranaction写入区块的操作都显示成粉色按钮，这些操作都需要执行挖矿之后才能生效。&lt;/p&gt;
+
+&lt;h2 id=&quot;从geth-console调用智能合约&quot;&gt;从geth console调用智能合约&lt;/h2&gt;
+&lt;p&gt;我们可以从remix-ide上调用Adder中的方法，但是transaction操作需要执行挖矿才能进行，否则Transaction将一直处于pending状态；
+同样我们可以在geth console上调用智能合约。我们需要拷贝下图中所示的ABI内容和上图中的Adder Address，分别赋值给变量abi和address。
+&lt;img height=&quot;220&quot; src=&quot;/images/blockchain3.png&quot; /&gt;&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&amp;gt; var abi=[{&quot;constant&quot;:true,&quot;inputs&quot;:[],&quot;name&quot;:&quot;getName&quot;,&quot;outputs&quot;:[{&quot;name&quot;:&quot;&quot;,&quot;type&quot;:&quot;string&quot;}],&quot;payable&quot;:false,&quot;stateMutability&quot;:&quot;view&quot;,&quot;type&quot;:&quot;function&quot;},{&quot;constant&quot;:true,&quot;inputs&quot;:[{&quot;name&quot;:&quot;a&quot;,&quot;type&quot;:&quot;int256&quot;},{&quot;name&quot;:&quot;b&quot;,&quot;type&quot;:&quot;int256&quot;}],&quot;name&quot;:&quot;add&quot;,&quot;outputs&quot;:[{&quot;name&quot;:&quot;&quot;,&quot;type&quot;:&quot;int256&quot;}],&quot;payable&quot;:false,&quot;stateMutability&quot;:&quot;view&quot;,&quot;type&quot;:&quot;function&quot;},{&quot;constant&quot;:false,&quot;inputs&quot;:[{&quot;name&quot;:&quot;_name&quot;,&quot;type&quot;:&quot;string&quot;}],&quot;name&quot;:&quot;setName&quot;,&quot;outputs&quot;:[],&quot;payable&quot;:false,&quot;stateMutability&quot;:&quot;nonpayable&quot;,&quot;type&quot;:&quot;function&quot;}]
+&amp;gt; var address=&quot;0x3bf0b1d614df44a610865d62edc27bae12204c55&quot;
+&amp;gt; var adder=eth.contract(abi).at(address)
+&amp;gt; eth.defaultAccount=eth.accounts[0]
+&amp;gt; personal.unlockAccount(eth.defaultAccount)
+&amp;gt; adder.setName(&quot;Bob&quot;)
+&amp;gt; eth.pendingTransactions
+[{
+    blockHash: null,
+    blockNumber: null,
+    from: &quot;0xd870d9a0cbfa37a53563f12a783fb697027f5668&quot;,
+    gas: 90000,
+    gasPrice: 18000000000,
+    hash: &quot;0xef6837fcd5a92720013c964ccc634957635bd71b00281b01c49f8293fdcba93a&quot;,
+    input: &quot;0xc47f002700000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000003426f620000000000000000000000000000000000000000000000000000000000&quot;,
+    nonce: 15,
+    r: &quot;0xf736b15dd5741a6b95ed6b901eda7c673d27ff8ed02bb536035044523984476a&quot;,
+    s: &quot;0x24c6c4e5d12997f234fd5ef92503928dcccc4330574d243fca6ccf9d30465711&quot;,
+    to: &quot;0x3bf0b1d614df44a610865d62edc27bae12204c55&quot;,
+    transactionIndex: 0,
+    v: &quot;0x1c&quot;,
+    value: 0
+}]
+&amp;gt; miner.start()
+&amp;gt; eth.pendingTransactions
+[]
+&amp;gt; miner.stop()
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>搭建本地以太坊私链</title>
+   <link href="/blockchain/2018/06/30/local-private-ethereum/"/>
+   <updated>2018-06-30T08:01:01+08:00</updated>
+   <id>/blockchain/2018/06/30/local-private-ethereum</id>
+   <content type="html">&lt;h2 id=&quot;macos以太坊安装&quot;&gt;macOS以太坊安装&lt;/h2&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ brew tap ethereum/ethereum
+$ brew install ethereum
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;创建ethereum_home&quot;&gt;创建ethereum_home&lt;/h2&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ cd ~
+$ mkdir ethereum
+$ echo 'export ethereum_home=$HOME/ethereum' &amp;gt;&amp;gt; ~/.zshrc
+$ source ~/.zshrc
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;h2 id=&quot;创建创世纪genesis文件&quot;&gt;创建创世纪(Genesis)文件&lt;/h2&gt;
+&lt;p&gt;创世纪区块是区块链上的第一个区块，Genesis文件是一个JSON文件，描述了初始区块的特性。&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ cd $ethereum_home
+$ touch genesis.json
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;&lt;strong&gt;genesis.json&lt;/strong&gt;内容如下：&lt;/p&gt;
+&lt;div class=&quot;language-json highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;nonce&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;0x0000000000000042&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;timestamp&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;0x0&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;parentHash&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;0x0000000000000000000000000000000000000000000000000000000000000000&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;extraData&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;0x&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;gasLimit&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;0x8000000&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;difficulty&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;0x400&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;config&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:{},&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;mixhash&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;0x0000000000000000000000000000000000000000000000000000000000000000&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;coinbase&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;0x3333333333333333333333333333333333333333&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;alloc&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;h2 id=&quot;启动以太坊node&quot;&gt;启动以太坊Node&lt;/h2&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ geth --datadir &quot;$ethereum_home/eth1&quot; init &quot;$ethereum_home/genesis.json&quot;
+$ geth --datadir &quot;$ethereum_home/eth1&quot; --networkid 1234 console 2&amp;gt;&amp;gt;eth1.log
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;通过geth.ipc可以将多个终端attach同一个console&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ geth attach ipc:$ethereum_home/eth1/geth.ipc
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;启动peer-node&quot;&gt;启动Peer Node&lt;/h2&gt;
+&lt;p&gt;采用同样的genesis.json&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ geth --datadir &quot;$ethereum_home/eth2&quot; init &quot;$ethereum_home/genesis.json&quot;
+$ geth --datadir &quot;$ethereum_home/eth2&quot; --port 30304 --nodiscover --networkid 1234 console 2&amp;gt;&amp;gt;eth2.log
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;通过admin.nodeInfo获取enode&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&amp;gt; admin.nodeInfo
+{
+  enode: &quot;enode://30312c1a5e16a1698c3b901fec03d5ae81a094dd913f1a480d5d82fad0be26911b2d1abe2b63f0b21948aa0ab4815a70880ca7d8ac19c2abd047d2e75e77552a@[::]:30304?discport=0&quot;,
+  id: &quot;30312c1a5e16a1698c3b901fec03d5ae81a094dd913f1a480d5d82fad0be26911b2d1abe2b63f0b21948aa0ab4815a70880ca7d8ac19c2abd047d2e75e77552a&quot;,
+  ip: &quot;::&quot;,
+  listenAddr: &quot;[::]:30304&quot;,
+  name: &quot;Geth/v1.8.11-stable/darwin-amd64/go1.10.3&quot;,
+  ports: {
+    discovery: 0,
+    listener: 30304
+  },
+  protocols: {
+    eth: {
+      config: {
+        chainId: null,
+        eip150Hash: &quot;0x0000000000000000000000000000000000000000000000000000000000000000&quot;
+      },
+      difficulty: 1024,
+      genesis: &quot;0x6231b02ac967dff9b0c799e956094408959de862d720d08776302ffefba0300b&quot;,
+      head: &quot;0x6231b02ac967dff9b0c799e956094408959de862d720d08776302ffefba0300b&quot;,
+      network: 1234
+    }
+  }
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;切换到console 1, admin.addPeer&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&amp;gt; admin.addPeer(&quot;enode://30312c1a5e16a1698c3b901fec03d5ae81a094dd913f1a480d5d82fad0be26911b2d1abe2b63f0b21948aa0ab4815a70880ca7d8ac19c2abd047d2e75e77552a@[::]:30304?discport=0&quot;)
+&amp;gt; addmin.peers
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;运行&lt;em&gt;admin.peers&lt;/em&gt;，我们可以看到peer的信息了&lt;/p&gt;
+
+&lt;h2 id=&quot;启动挖矿&quot;&gt;启动挖矿&lt;/h2&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&amp;gt; eth.blockNumber
+0
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;这里我们看到区块数目是0，因为还没有开始挖矿。挖矿前需要建立account，否则执行挖矿会报错（Error: etherbase missing）&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&amp;gt; personal.newAccount('123456')
+&quot;0x9fc496826bc0745af978c7cad7d90ddee06a6293&quot;
+&amp;gt; miner.start(1)
+&amp;gt; eth.blockNumber
+4
+&amp;gt; eth.blockNumber
+6
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;我们可以在两个Node的Console上都可以看到blockNumber在不断增加，虽然只是在一个Node上进行挖矿。start(1)这里的1代表一个线程挖矿。
+通过下面命令可以获取block信息和最新的block对应的miner&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&amp;gt; eth.getBlock(5)
+&amp;gt; eth.getBlock(eth.blockNumber).miner
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;停止挖矿&lt;/p&gt;
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; miner.stop&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;测试交易&quot;&gt;测试交易&lt;/h2&gt;
+&lt;p&gt;新建一个账户，查看其余额&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&amp;gt; personal.newAccount(&quot;123456)
+0xd870d9a0cbfa37a53563f12a783fb697027f5668
+&amp;gt; eth.getBalance(&quot;0xd870d9a0cbfa37a53563f12a783fb697027f5668&quot;)
+0
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;查看之前挖矿的账户余额，用之前账户转20 Wei&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&amp;gt; eth.getBalance(&quot;0x9fc496826bc0745af978c7cad7d90ddee06a6293&quot;)
+1.01968750000000000002e+21
+&amp;gt; eth.sendTransaction({from:&quot;0x9fc496826bc0745af978c7cad7d90ddee06a6293&quot;, to:&quot;0xd870d9a0cbfa37a53563f12a783fb697027f5668&quot;,value:20})
+Error: authentication needed: password or unlock
+    at web3.js:3143:20
+    at web3.js:6347:15
+    at web3.js:5081:36
+    at &amp;lt;anonymous&amp;gt;:1:1
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;unlockAccount&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&amp;gt; personal.unlockAccount(&quot;0x9fc496826bc0745af978c7cad7d90ddee06a6293&quot;)
+&amp;gt; eth.sendTransaction({from:&quot;0x9fc496826bc0745af978c7cad7d90ddee06a6293&quot;, to:&quot;0xd870d9a0cbfa37a53563f12a783fb697027f5668&quot;,value:20})
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;这时候我们再次查看新账号余额会发现仍旧是0，这是因为我们之前停止了挖矿，重新开启挖矿，过几秒之后我们发现新账号余额增加了20 wei&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&amp;gt; eth.getBalance(&quot;0xd870d9a0cbfa37a53563f12a783fb697027f5668&quot;)
+0
+&amp;gt; miner.start(1)
+&amp;gt; eth.getBalance(&quot;0xd870d9a0cbfa37a53563f12a783fb697027f5668&quot;)
+20
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;api&quot;&gt;API&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;admin.*&lt;/li&gt;
+  &lt;li&gt;personal.*&lt;/li&gt;
+  &lt;li&gt;eth.*
+    &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&amp;gt; admin.nodeInfo
+&amp;gt; personal.newAccount()
+&amp;gt; personal.listAccounts
+&amp;gt; eth.blockNumber
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>Zookeeper基础</title>
+   <link href="/distributed/2018/06/03/zookeeper-basics/"/>
+   <updated>2018-06-03T08:01:01+08:00</updated>
+   <id>/distributed/2018/06/03/zookeeper-basics</id>
+   <content type="html">&lt;p&gt;一般设计一个分布式协同服务都会提供一组primitives的列表，对于每个primitive暴露一些接口来创建实例，比如分布式锁可以作为一个primitive，
+它暴露了一些接口如create, acquire, release等。这种设计会存在一些问题：1）扩展性差，需要提供大量的primitives，还要不断扩展API；
+2）灵活性差，对于不同应用适用性会差的较多&lt;/p&gt;
+
+&lt;p&gt;Zookeeper的设计并没有直接暴露primitives，而是暴露了一组类似操作文件系统的API来帮助不同应用构建自己的primitives。Zookeeper允许操作
+小的数据节点，被称为&lt;strong&gt;&lt;em&gt;znode&lt;/em&gt;&lt;/strong&gt;。&lt;strong&gt;&lt;em&gt;znode&lt;/em&gt;&lt;/strong&gt;按照树的层级关系组织起来，如下图所示：&lt;/p&gt;
+
+&lt;p&gt;&lt;img height=&quot;220&quot; src=&quot;/images/zookeeper1.png&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Zookeeper的znode中的数据是以byte array形式存储的，byte arrays的具体格式（如Protocol Buffers, Thrift, Avr）是由具体应用自己指定的，
+Zookeeper本身不支持对各种格式parse。&lt;/p&gt;
+
+&lt;h2 id=&quot;zookeeper支持的api包括&quot;&gt;Zookeeper支持的API包括：&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;create /path data&lt;/li&gt;
+  &lt;li&gt;delete /path&lt;/li&gt;
+  &lt;li&gt;get /path&lt;/li&gt;
+  &lt;li&gt;set /path data&lt;/li&gt;
+  &lt;li&gt;ls /path&lt;/li&gt;
+  &lt;li&gt;stat /path&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Note: 具体API操作说明可以通过help命令查看&lt;/p&gt;
+
+&lt;h2 id=&quot;znode的模式&quot;&gt;ZNode的模式&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;persistent
+    &lt;ul&gt;
+      &lt;li&gt;&lt;em&gt;create&lt;/em&gt;命令默认创建的模式，只有通过&lt;em&gt;delete&lt;/em&gt;操作才能删除掉&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;ephemeral
+    &lt;ul&gt;
+      &lt;li&gt;可以通过&lt;em&gt;create -e&lt;/em&gt;命令创建，显示&lt;em&gt;delete&lt;/em&gt;或连接session过期都能删除掉&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;persistent_sequential
+    &lt;ul&gt;
+      &lt;li&gt;可以通过&lt;em&gt;create -s&lt;/em&gt;命令创建，如连续三次执行&lt;em&gt;create -s /tasks/task- ““&lt;/em&gt;会创建&lt;em&gt;task-0000000000&lt;/em&gt;，&lt;em&gt;task-0000000001&lt;/em&gt;，
+  &lt;em&gt;task-0000000002&lt;/em&gt;三个节点&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;ephemeral_sequential
+    &lt;ul&gt;
+      &lt;li&gt;可以通过&lt;em&gt;create -e -s&lt;/em&gt;命令创建&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;watch&quot;&gt;Watch&lt;/h2&gt;
+&lt;p&gt;Zookeeper的client如何知道znode的数据或状态发生变化呢？Zookeeper采用notification的机制，允许client通过对znode设置一个watch来注册接收
+notification。&lt;em&gt;Watch&lt;/em&gt;是一次性的，一个watch只能接收一次notification。如下图所示：&lt;/p&gt;
+
+&lt;p&gt;&lt;img height=&quot;220&quot; src=&quot;/images/zookeeper2.png&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;client每次收到notification之后都需要设置一个新的&lt;em&gt;watch&lt;/em&gt;，这期间znode可能会发生新的变化，有人会觉得新的变化会被client错过，但实际上每次
+设置&lt;em&gt;watch&lt;/em&gt;都会伴随着一次读操作，所以不会错过任何状态变化。&lt;/p&gt;
+
+&lt;h2 id=&quot;version&quot;&gt;Version&lt;/h2&gt;
+&lt;p&gt;有些API操作需要client带上znode的version作为参数，只有version与server当前的version一致时候，操作才能生效，这样确保在并发操作的情况下
+正确性，如图所示：&lt;/p&gt;
+
+&lt;p&gt;&lt;img height=&quot;220&quot; src=&quot;/images/zookeeper3.png&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;zookeeper架构&quot;&gt;Zookeeper架构&lt;/h2&gt;
+&lt;p&gt;Zookeeper整体架构如下图所示：&lt;/p&gt;
+
+&lt;p&gt;&lt;img height=&quot;250&quot; src=&quot;/images/zookeeper4.png&quot; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;zookeeper-quorum&quot;&gt;Zookeeper Quorum&lt;/h3&gt;
+&lt;p&gt;&lt;em&gt;quorum&lt;/em&gt;是需要参加投票的最少的server个数，也是确保client数据安全保存了的最小server数目。
+Zookeeper集群server的数量最好是奇数。&lt;/p&gt;
+
+&lt;h3 id=&quot;sessions&quot;&gt;Sessions&lt;/h3&gt;
+&lt;p&gt;Client提交到zookeeper的所有操作都是关联到某一个session的。当session结束时，session内创建的所有ephemeral节点全部被删除。
+同一session内的API操作能确保FIFO。client建立的session如果失去了与当前server的连接，client library能确保client重新与其它server建立连接，
+但仍沿用同一个session id。&lt;/p&gt;
+
+</content>
+ </entry>
+ 
+ <entry>
+   <title>Zookeeper服务器集群搭建</title>
+   <link href="/distributed/2018/06/02/zookeeper-getting-started/"/>
+   <updated>2018-06-02T08:01:01+08:00</updated>
+   <id>/distributed/2018/06/02/zookeeper-getting-started</id>
+   <content type="html">&lt;h2 id=&quot;获取zookeeper&quot;&gt;获取zookeeper&lt;/h2&gt;
+&lt;p&gt;从apache zookeeper官网上获取zookeeper&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;https://www.apache.org/dyn/closer.cgi/zookeeper/
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;zkserversh&quot;&gt;zkServer.sh&lt;/h2&gt;
+&lt;h3 id=&quot;配置集群&quot;&gt;配置集群&lt;/h3&gt;
+&lt;p&gt;可以在本机上模拟集群搭建，不同server用不同port即可。可以在 &lt;strong&gt;/conf&lt;/strong&gt;目录下创建三个cfg文件：zoo1.cfg, zoo2,cfg, zoo3.cfg, 分别赋予
+不同的clientPort（如2181，2182，2183）和dataDir (“./data/zk1”, “./data/zk2”, “./data/zk3”)，其他的配置保持一致，具体配置如下&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;# The number of milliseconds of each tick
+tickTime=2000
+# The number of ticks that the initial
+# synchronization phase can take
+initLimit=10
+# The number of ticks that can pass between
+# sending a request and getting an acknowledgement
+syncLimit=5
+# the directory where the snapshot is stored.
+# do not use /tmp for storage, /tmp here is just
+# example sakes.
+dataDir=./data/zk1
+# the port at which the clients will connect
+clientPort=2181
+
+# the first port is for quorum communication, the second port is for leader election
+server.1=localhost:2881:3881
+server.2=localhost:2882:3882
+server.3=localhost:2883:3883
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;在dataDir指定的路径下创建myid文件&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ echo 1 &amp;gt; ./data/zk1/myid
+$ echo 2 &amp;gt; ./data/zk2/myid
+$ echo 3 &amp;gt; ./data/zk3/myid
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;启动zk集群&quot;&gt;启动zk集群&lt;/h3&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ bin/zkServer.sh start conf/zoo1.cfg
+$ bin/zkServer.sh start conf/zoo2.cfg
+$ bin/zkServer.sh start conf/zoo3.cfg
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;zk server的log会记录到zookeeper.out。如果为了方便测试查看server log，可以采用下面命令启动server&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ bin/zkServer.sh start-foreground conf/zoo1.cfg
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;集群测试&quot;&gt;集群测试&lt;/h3&gt;
+&lt;p&gt;可以用zk自带的zkCli.sh对搭建的集群进行一些测试，如创建一个/tmp节点，然后添加test子节点数据。首先需要用&lt;a href=&quot;#zk-client&quot;&gt;&lt;strong&gt;zkCli.sh&lt;/strong&gt;&lt;/a&gt;
+连接到server。&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;...] create /tmp &quot;&quot;
+...] create /tmp/test &quot;abc&quot;
+...] get /tmp
+...] get /tmp/test
+...] delete /tmp/test
+...] delete /tmp
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;zkclish&quot;&gt;&lt;a name=&quot;zk-client&quot;&gt;&lt;/a&gt;zkCli.sh&lt;/h2&gt;
+&lt;p&gt;通过zkCli.sh连接zookeeper服务器的命令&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ bin/zkCli.sh -server 127.0.0.1:2181
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;这种方式存在的问题是一旦2181端口对应的server挂掉，client会一直尝试连接，并且失败。当2181端口对应的server重启后，client会报连接失败，
+session过期，connection会被close掉，
+所以-server参数最好带上所有的server地址。&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ bin/zkCli.sh -server 127.0.0.1:2181,127.0.0.1:2182,127.0.0.1:2183
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;当zookeeper集群有server有机器挂掉，存在下面几种情况&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;如果client连接到的server挂了
+    &lt;ul&gt;
+      &lt;li&gt;该server是leader，则zookeeper在原来两个follower中重新选举leader后，client会连接到某台server上&lt;/li&gt;
+      &lt;li&gt;该server是follower, client会与另外两台server建立连接&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;如果不是client连接的那台server挂了
+    &lt;ul&gt;
+      &lt;li&gt;如果挂的server是leader，由于要重新选举，client的connection会被refused，client尝试reconnect，选举成功后，client会再连接上，
+  和之前是同一个session&lt;/li&gt;
+      &lt;li&gt;如果挂的server不是leader，client的连接不受任何影响&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;如果挂的server数目超过了多数，client将无法连接到server&lt;/li&gt;
+&lt;/ul&gt;
+
+</content>
+ </entry>
+ 
+
+</feed>

@@ -1,6 +1,6 @@
 
 
-        <!DOCTYPE HTML>
+ <!DOCTYPE HTML>
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
@@ -8,7 +8,7 @@
     
     
     
-    <title>行胜于言</title>
+    <title>在本地私链上运行智能合约 | 行胜于言</title>
 
 
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
@@ -21,14 +21,14 @@
 
     <meta name="description" content="page.description">
     
-    <meta property="og:type" content="website">
+    <meta property="og:type" content="article">
     
-    <meta property="og:title" content="">
-    <meta property="og:url" content="/">
+    <meta property="og:title" content="在本地私链上运行智能合约">
+    <meta property="og:url" content="/blockchain/2018/06/30/first-smart-contract/">
     <meta property="og:site_name" content="行胜于言">
     <meta property="og:description" content="">
     <meta name="twitter:card" content="summary">
-    <meta name="twitter:title" content="">
+    <meta name="twitter:title" content="在本地私链上运行智能合约">
     <meta name="twitter:description" content="page.description">
     <meta name="twitter:creator" content="@">
     <link rel="publisher" href="">
@@ -96,140 +96,123 @@
 
     </header>
     <div id="container">
-      <div id="main">
+      
 
+
+
+<div id="main" class="post" itemscope itemprop="blogPost">
   
-  
-  
-  
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/distributed/2018/08/26/zookeeper-api/" title="Zookeeper API使用" itemprop="url">Zookeeper API使用</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="xiabo2011" target="_blank" itemprop="author">xiabo2011</a>
-		
-  </p>
-  <p class="article-time">
-    <time datetime="2018-08-26 08:01:01 +0800" itemprop="datePublished">  2018-08-26</time>
-
-  </p>
-</header>
-    <div class="article-content">
-        
-        <h2 id="zookeeper-session">Zookeeper session</h2>
-<p>通过org.apache.zookeeper.Zookeeper类构建zookeeper session</p>
-<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">Zookeeper</span><span class="o">(</span>
-    <span class="n">String</span> <span class="n">connectString</span><span class="o">,</span>   <span class="c1">// servers address e.g.: "127.0.0.1:2181,127.0.0.1:2182,127.0.0.1:2183"</span>
-    <span class="kt">int</span> <span class="n">sessionTimeout</span><span class="o">,</span>     <span class="c1">// session timeout in millisecond</span>
-    <span class="n">Watcher</span> <span class="n">watcher</span>         <span class="c1">// 用来接收session event, watcher是接口，需要传递一个实现接口的实例化object</span>
-<span class="o">)</span>
-</code></pre></div></div>
-
-
-        
-        
-        <p class="article-more-link">
-          
-            <a href="/distributed/2018/08/26/zookeeper-api/#more">Read More</a>
-          
-       </p>
-    </div>
-    
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <!--
-  <%- list_categories(item.categories, {
-      show_count: false,
-      class: 'article-category',
-      style: 'none',
-      separator: '►'
-  }) %>
-  -->
-  
-  <a class="article-category-link" href="/categories/#distributed">distributed</a>
-  
-</div>
-
-
-  <div class="article-tags">
-  <!--
-  <% var tags = [];
-    item.tags.forEach(function(tag){
-      tags.push('<a href="' + config.root + tag.path + '">' + tag.name + '</a>');
-    }); %>-->
-  <span></span> <!--<%- tags.join('') %>-->
-  
-  
-  <a href="/tags/#zookeeper">zookeeper</a>
-  
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-</div>
-
-</footer>
-
-    </article>
-
-
-
-
-
-
-  
-  
-  
-  
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
+	<article itemprop="articleBody"> 
+	<header class="article-info clearfix">
   <h1 itemprop="name">
     
       <a href="/blockchain/2018/06/30/first-smart-contract/" title="在本地私链上运行智能合约" itemprop="url">在本地私链上运行智能合约</a>
   </h1>
+  <p class="article-pv">
+    <span id="busuanzi_container_page_pv">访问量： <span id="busuanzi_value_page_pv"></span></span>
+    <p/>
   <p class="article-author">By
        
 		<a href="/about" title="xiabo2011" target="_blank" itemprop="author">xiabo2011</a>
 		
   </p>
   <p class="article-time">
-    <time datetime="2018-06-30 08:01:01 +0800" itemprop="datePublished">  2018-06-30</time>
-
+    <time datetime="2018-06-30 08:01:01 +0800" itemprop="datePublished"> 发表于 2018-06-30</time>
+    
   </p>
 </header>
-    <div class="article-content">
-        
-        <h2 id="准备工作">准备工作</h2>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article toc-content" style="display: none;">
+		
+			<!--<%- toc(item.content) %>-->
+		
+		</div>
+		
+		<h2 id="准备工作">准备工作</h2>
 <ul>
   <li>根据上一篇blog搭建私链</li>
   <li>下载 <a href="https://github.com/ethereum/remix-ide/tree/gh-pages">remix-ide</a>，我们这里要下载<em>gh-pages</em>分支，该分支为最新的稳定的build。remix-ide是一个用来编译运行智能合约的ide工具</li>
 </ul>
 
+<h2 id="启动私链节点">启动私链节点</h2>
+<p>相比于上一篇blog提到的启动命令，这里加入rpc相关的参数</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ geth --datadir "$ethereum_home/eth2" --port 30304 --nodiscover --networkid 1234 --rpcport 8545 --rpccorsdomain "*" --unlock 0 console 2&gt;&gt;eth2.log
+</code></pre></div></div>
+<p>”–unlock 0”表示要求unlock eth.accounts[0]，在提示输入Passphrase后就会解锁eth.accounts[0]</p>
 
-        
-        
-        <p class="article-more-link">
-          
-            <a href="/blockchain/2018/06/30/first-smart-contract/#more">Read More</a>
-          
-       </p>
-    </div>
+<h2 id="配置remix-ide">配置remix-ide</h2>
+<ul>
+  <li>Run-&gt;Environment: Web3 Provider</li>
+  <li>Web3 Provider Endpoint: http://localhost:8545</li>
+</ul>
+
+<h2 id="新建一个solidity源文件">新建一个solidity源文件</h2>
+<p>simple.sol</p>
+<pre><code class="language-solidity">pragma solidity ^0.4.0;
+
+contract Adder {
+    string name;
     
-    <footer class="article-footer clearfix">
+    function setName(string _name) public {
+        name = _name;
+    }
+    
+    function getnName() public constant returns (string) {
+        return name;
+    }
+    
+    function add(int a, int b) public constant returns (int) {
+        return a + b;
+    }
+}
+</code></pre>
+
+<p>点击ide上的<strong>create</strong>按钮，如果上面geth命令没有带上”–unlock 0”就会看到”creation of Adder errored”，需要我们unlock Account。
+否则会看到”creation of Adder pending…“字样</p>
+
+<p><img height="220" src="/images/blockchain1.png" />
+如上图所示我们看到”1 pending transactions”，这是因为是一个transaction，需要写入区块链才能生效，所以我们需要开启挖矿miner.start()，
+执行之后，我们会看到如下图所示结果
+<img height="220" src="/images/blockchain2.png" />
+从图中我们可以看出，remix-ide中会把需要tranaction写入区块的操作都显示成粉色按钮，这些操作都需要执行挖矿之后才能生效。</p>
+
+<h2 id="从geth-console调用智能合约">从geth console调用智能合约</h2>
+<p>我们可以从remix-ide上调用Adder中的方法，但是transaction操作需要执行挖矿才能进行，否则Transaction将一直处于pending状态；
+同样我们可以在geth console上调用智能合约。我们需要拷贝下图中所示的ABI内容和上图中的Adder Address，分别赋值给变量abi和address。
+<img height="220" src="/images/blockchain3.png" /></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt; var abi=[{"constant":true,"inputs":[],"name":"getName","outputs":[{"name":"","type":"string"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"a","type":"int256"},{"name":"b","type":"int256"}],"name":"add","outputs":[{"name":"","type":"int256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_name","type":"string"}],"name":"setName","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"}]
+&gt; var address="0x3bf0b1d614df44a610865d62edc27bae12204c55"
+&gt; var adder=eth.contract(abi).at(address)
+&gt; eth.defaultAccount=eth.accounts[0]
+&gt; personal.unlockAccount(eth.defaultAccount)
+&gt; adder.setName("Bob")
+&gt; eth.pendingTransactions
+[{
+    blockHash: null,
+    blockNumber: null,
+    from: "0xd870d9a0cbfa37a53563f12a783fb697027f5668",
+    gas: 90000,
+    gasPrice: 18000000000,
+    hash: "0xef6837fcd5a92720013c964ccc634957635bd71b00281b01c49f8293fdcba93a",
+    input: "0xc47f002700000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000003426f620000000000000000000000000000000000000000000000000000000000",
+    nonce: 15,
+    r: "0xf736b15dd5741a6b95ed6b901eda7c673d27ff8ed02bb536035044523984476a",
+    s: "0x24c6c4e5d12997f234fd5ef92503928dcccc4330574d243fca6ccf9d30465711",
+    to: "0x3bf0b1d614df44a610865d62edc27bae12204c55",
+    transactionIndex: 0,
+    v: "0x1c",
+    value: 0
+}]
+&gt; miner.start()
+&gt; eth.pendingTransactions
+[]
+&gt; miner.stop()
+</code></pre></div></div>
+  
+	</div>
+	<footer class="article-footer clearfix">
 <div class="article-catetags">
 
 <div class="article-categories">
@@ -267,301 +250,52 @@
 
 
 
-
-<div class="comments-count">
+	<div class="article-share" id="share">
 	
-</div>
+	  <div data-url="/blockchain/2018/06/30/first-smart-contract/" data-title="在本地私链上运行智能合约 | 行胜于言" data-tsina="" class="share clearfix">
+	  </div>
+	
+	</div>
+
 
 </footer>
-
-    </article>
-
-
-
-
-
-
-  
-  
-  
-  
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/blockchain/2018/06/30/local-private-ethereum/" title="搭建本地以太坊私链" itemprop="url">搭建本地以太坊私链</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="xiabo2011" target="_blank" itemprop="author">xiabo2011</a>
-		
-  </p>
-  <p class="article-time">
-    <time datetime="2018-06-30 08:01:01 +0800" itemprop="datePublished">  2018-06-30</time>
-
-  </p>
-</header>
-    <div class="article-content">
-        
-        <h2 id="macos以太坊安装">macOS以太坊安装</h2>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ brew tap ethereum/ethereum
-$ brew install ethereum
-</code></pre></div></div>
-
-
-        
-        
-        <p class="article-more-link">
-          
-            <a href="/blockchain/2018/06/30/local-private-ethereum/#more">Read More</a>
-          
-       </p>
-    </div>
-    
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <!--
-  <%- list_categories(item.categories, {
-      show_count: false,
-      class: 'article-category',
-      style: 'none',
-      separator: '►'
-  }) %>
-  -->
-  
-  <a class="article-category-link" href="/categories/#blockchain">blockchain</a>
-  
-</div>
-
-
-  <div class="article-tags">
-  <!--
-  <% var tags = [];
-    item.tags.forEach(function(tag){
-      tags.push('<a href="' + config.root + tag.path + '">' + tag.name + '</a>');
-    }); %>-->
-  <span></span> <!--<%- tags.join('') %>-->
-  
-  
-  <a href="/tags/#ethereum">ethereum</a>
-  
-  <a href="/tags/#以太坊">以太坊</a>
-  
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
+   
+	</article>
 	
-</div>
-
-</footer>
-
-    </article>
-
-
-
-
-
-
-  
-  
-  
-  
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/distributed/2018/06/03/zookeeper-basics/" title="Zookeeper基础" itemprop="url">Zookeeper基础</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="xiabo2011" target="_blank" itemprop="author">xiabo2011</a>
-		
-  </p>
-  <p class="article-time">
-    <time datetime="2018-06-03 08:01:01 +0800" itemprop="datePublished">  2018-06-03</time>
-
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>一般设计一个分布式协同服务都会提供一组primitives的列表，对于每个primitive暴露一些接口来创建实例，比如分布式锁可以作为一个primitive，
-它暴露了一些接口如create, acquire, release等。这种设计会存在一些问题：1）扩展性差，需要提供大量的primitives，还要不断扩展API；
-2）灵活性差，对于不同应用适用性会差的较多</p>
-
-
-        
-        
-        <p class="article-more-link">
-          
-            <a href="/distributed/2018/06/03/zookeeper-basics/#more">Read More</a>
-          
-       </p>
-    </div>
-    
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <!--
-  <%- list_categories(item.categories, {
-      show_count: false,
-      class: 'article-category',
-      style: 'none',
-      separator: '►'
-  }) %>
-  -->
-  
-  <a class="article-category-link" href="/categories/#distributed">distributed</a>
-  
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/blockchain/2018/06/30/local-private-ethereum/" title="搭建本地以太坊私链">
+  <strong>上一篇：</strong><br/>
+  <span>
+  搭建本地以太坊私链</span>
+</a>
 </div>
 
 
-  <div class="article-tags">
-  <!--
-  <% var tags = [];
-    item.tags.forEach(function(tag){
-      tags.push('<a href="' + config.root + tag.path + '">' + tag.name + '</a>');
-    }); %>-->
-  <span></span> <!--<%- tags.join('') %>-->
-  
-  
-  <a href="/tags/#zookeeper">zookeeper</a>
-  
-  </div>
-
+<div class="next">
+<a href="/distributed/2018/08/26/zookeeper-api/"  title="Zookeeper API使用">
+ <strong>下一篇：</strong><br/> 
+ <span>Zookeeper API使用
+</span>
+</a>
 </div>
 
+</nav>
 
-
-
-<div class="comments-count">
 	
-</div>
 
-</footer>
+</div>  
 
-    </article>
-
-
-
-
-
-
-  
-  
-  
-  
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/distributed/2018/06/02/zookeeper-getting-started/" title="Zookeeper服务器集群搭建" itemprop="url">Zookeeper服务器集群搭建</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="xiabo2011" target="_blank" itemprop="author">xiabo2011</a>
-		
-  </p>
-  <p class="article-time">
-    <time datetime="2018-06-02 08:01:01 +0800" itemprop="datePublished">  2018-06-02</time>
-
-  </p>
-</header>
-    <div class="article-content">
-        
-        <h2 id="获取zookeeper">获取zookeeper</h2>
-<p>从apache zookeeper官网上获取zookeeper</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>https://www.apache.org/dyn/closer.cgi/zookeeper/
-</code></pre></div></div>
-
-
-        
-        
-        <p class="article-more-link">
-          
-            <a href="/distributed/2018/06/02/zookeeper-getting-started/#more">Read More</a>
-          
-       </p>
-    </div>
-    
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <!--
-  <%- list_categories(item.categories, {
-      show_count: false,
-      class: 'article-category',
-      style: 'none',
-      separator: '►'
-  }) %>
-  -->
-  
-  <a class="article-category-link" href="/categories/#distributed">distributed</a>
-  
-</div>
-
-
-  <div class="article-tags">
-  <!--
-  <% var tags = [];
-    item.tags.forEach(function(tag){
-      tags.push('<a href="' + config.root + tag.path + '">' + tag.name + '</a>');
-    }); %>-->
-  <span></span> <!--<%- tags.join('') %>-->
-  
-  
-  <a href="/tags/#zookeeper">zookeeper</a>
-  
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-</div>
-
-</footer>
-
-    </article>
-
-
-
-
-
-
-
-  <nav id="page-nav" class="clearfix">
-  <nav id="page-nav" class="clearfix">
-    
-    
-    <span class="page-number current">1</span>
-    
-    
-     
-  </nav>
-  </nav>
-
-</div>
       
       
       <div class="openaside"><a class="navbutton" href="#" title="Show Sidebar"></a></div>
+
+  <div id="toc" class="toc-aside toc-content">
+ 
+ <!--<%- toc(item.content) %>-->
+ 
+  </div>
 
 <div id="asidepart">
 <div class="closeaside"><a class="closebutton" href="#" title="Hide Sidebar"></a></div>
@@ -755,6 +489,8 @@ $(document).ready(function(){
       a.css('display', 'block').removeClass('fadeOut');
       o.css('display', 'none');
       
+      $('#toc.toc-aside').css('display', 'none');
+      
     }
   });
 });
@@ -779,9 +515,108 @@ $(document).ready(function() {
 
 
 
+<script type="text/javascript">
+$(document).ready(function(){
+  $('#toc.toc-aside').toc({
+    title: "文章目录",
+    showEffect: "none"
+  });
+  $('#toc.toc-article').toc({
+    title: "文章目录",
+    showEffect: "show",
+    showSpeed: 0
+  });
+});
+</script>
 
 
 
+<script type="text/javascript">
+$(document).ready(function(){
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+
+<script type="text/javascript">
+$(document).ready(function(){
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<div class="hoverqrcode clearfix"></div>',
+  '<a class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#nothing"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+/*
+  $('.hoverqrcode').hide();
+
+  var myWidth = 0;
+  function updatehoverqrcode(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+    var qrsize = myWidth > 1024 ? 200:100;
+    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
+    var p = $('.article-share-qrcode').position();
+    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
+                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
+                          .qrcode(options);
+  };
+  $(window).resize(function(){
+    $('.hoverqrcode').hide();
+  });
+  $('.article-share-qrcode').click(function(){
+    updatehoverqrcode();
+    $('.hoverqrcode').toggle();
+  });
+  $('.article-share-qrcode').hover(function(){}, function(){
+      //$('.hoverqrcode').hide();
+  });
+  */
+});
+</script>
 
 
 
@@ -895,5 +730,5 @@ var _hmt = _hmt || [];
 <!-- Tiny_search End -->
 
   </body>
- </html>
+</html>
 

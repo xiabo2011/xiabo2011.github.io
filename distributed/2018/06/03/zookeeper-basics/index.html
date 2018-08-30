@@ -1,6 +1,6 @@
 
 
-        <!DOCTYPE HTML>
+ <!DOCTYPE HTML>
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
@@ -8,7 +8,7 @@
     
     
     
-    <title>行胜于言</title>
+    <title>Zookeeper基础 | 行胜于言</title>
 
 
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
@@ -21,14 +21,14 @@
 
     <meta name="description" content="page.description">
     
-    <meta property="og:type" content="website">
+    <meta property="og:type" content="article">
     
-    <meta property="og:title" content="">
-    <meta property="og:url" content="/">
+    <meta property="og:title" content="Zookeeper基础">
+    <meta property="og:url" content="/distributed/2018/06/03/zookeeper-basics/">
     <meta property="og:site_name" content="行胜于言">
     <meta property="og:description" content="">
     <meta name="twitter:card" content="summary">
-    <meta name="twitter:title" content="">
+    <meta name="twitter:title" content="Zookeeper基础">
     <meta name="twitter:description" content="page.description">
     <meta name="twitter:creator" content="@">
     <link rel="publisher" href="">
@@ -96,319 +96,120 @@
 
     </header>
     <div id="container">
-      <div id="main">
+      
 
+
+
+<div id="main" class="post" itemscope itemprop="blogPost">
   
-  
-  
-  
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/distributed/2018/08/26/zookeeper-api/" title="Zookeeper API使用" itemprop="url">Zookeeper API使用</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="xiabo2011" target="_blank" itemprop="author">xiabo2011</a>
-		
-  </p>
-  <p class="article-time">
-    <time datetime="2018-08-26 08:01:01 +0800" itemprop="datePublished">  2018-08-26</time>
-
-  </p>
-</header>
-    <div class="article-content">
-        
-        <h2 id="zookeeper-session">Zookeeper session</h2>
-<p>通过org.apache.zookeeper.Zookeeper类构建zookeeper session</p>
-<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">Zookeeper</span><span class="o">(</span>
-    <span class="n">String</span> <span class="n">connectString</span><span class="o">,</span>   <span class="c1">// servers address e.g.: "127.0.0.1:2181,127.0.0.1:2182,127.0.0.1:2183"</span>
-    <span class="kt">int</span> <span class="n">sessionTimeout</span><span class="o">,</span>     <span class="c1">// session timeout in millisecond</span>
-    <span class="n">Watcher</span> <span class="n">watcher</span>         <span class="c1">// 用来接收session event, watcher是接口，需要传递一个实现接口的实例化object</span>
-<span class="o">)</span>
-</code></pre></div></div>
-
-
-        
-        
-        <p class="article-more-link">
-          
-            <a href="/distributed/2018/08/26/zookeeper-api/#more">Read More</a>
-          
-       </p>
-    </div>
-    
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <!--
-  <%- list_categories(item.categories, {
-      show_count: false,
-      class: 'article-category',
-      style: 'none',
-      separator: '►'
-  }) %>
-  -->
-  
-  <a class="article-category-link" href="/categories/#distributed">distributed</a>
-  
-</div>
-
-
-  <div class="article-tags">
-  <!--
-  <% var tags = [];
-    item.tags.forEach(function(tag){
-      tags.push('<a href="' + config.root + tag.path + '">' + tag.name + '</a>');
-    }); %>-->
-  <span></span> <!--<%- tags.join('') %>-->
-  
-  
-  <a href="/tags/#zookeeper">zookeeper</a>
-  
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-</div>
-
-</footer>
-
-    </article>
-
-
-
-
-
-
-  
-  
-  
-  
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/blockchain/2018/06/30/first-smart-contract/" title="在本地私链上运行智能合约" itemprop="url">在本地私链上运行智能合约</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="xiabo2011" target="_blank" itemprop="author">xiabo2011</a>
-		
-  </p>
-  <p class="article-time">
-    <time datetime="2018-06-30 08:01:01 +0800" itemprop="datePublished">  2018-06-30</time>
-
-  </p>
-</header>
-    <div class="article-content">
-        
-        <h2 id="准备工作">准备工作</h2>
-<ul>
-  <li>根据上一篇blog搭建私链</li>
-  <li>下载 <a href="https://github.com/ethereum/remix-ide/tree/gh-pages">remix-ide</a>，我们这里要下载<em>gh-pages</em>分支，该分支为最新的稳定的build。remix-ide是一个用来编译运行智能合约的ide工具</li>
-</ul>
-
-
-        
-        
-        <p class="article-more-link">
-          
-            <a href="/blockchain/2018/06/30/first-smart-contract/#more">Read More</a>
-          
-       </p>
-    </div>
-    
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <!--
-  <%- list_categories(item.categories, {
-      show_count: false,
-      class: 'article-category',
-      style: 'none',
-      separator: '►'
-  }) %>
-  -->
-  
-  <a class="article-category-link" href="/categories/#blockchain">blockchain</a>
-  
-</div>
-
-
-  <div class="article-tags">
-  <!--
-  <% var tags = [];
-    item.tags.forEach(function(tag){
-      tags.push('<a href="' + config.root + tag.path + '">' + tag.name + '</a>');
-    }); %>-->
-  <span></span> <!--<%- tags.join('') %>-->
-  
-  
-  <a href="/tags/#ethereum">ethereum</a>
-  
-  <a href="/tags/#以太坊">以太坊</a>
-  
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-</div>
-
-</footer>
-
-    </article>
-
-
-
-
-
-
-  
-  
-  
-  
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/blockchain/2018/06/30/local-private-ethereum/" title="搭建本地以太坊私链" itemprop="url">搭建本地以太坊私链</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="xiabo2011" target="_blank" itemprop="author">xiabo2011</a>
-		
-  </p>
-  <p class="article-time">
-    <time datetime="2018-06-30 08:01:01 +0800" itemprop="datePublished">  2018-06-30</time>
-
-  </p>
-</header>
-    <div class="article-content">
-        
-        <h2 id="macos以太坊安装">macOS以太坊安装</h2>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ brew tap ethereum/ethereum
-$ brew install ethereum
-</code></pre></div></div>
-
-
-        
-        
-        <p class="article-more-link">
-          
-            <a href="/blockchain/2018/06/30/local-private-ethereum/#more">Read More</a>
-          
-       </p>
-    </div>
-    
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <!--
-  <%- list_categories(item.categories, {
-      show_count: false,
-      class: 'article-category',
-      style: 'none',
-      separator: '►'
-  }) %>
-  -->
-  
-  <a class="article-category-link" href="/categories/#blockchain">blockchain</a>
-  
-</div>
-
-
-  <div class="article-tags">
-  <!--
-  <% var tags = [];
-    item.tags.forEach(function(tag){
-      tags.push('<a href="' + config.root + tag.path + '">' + tag.name + '</a>');
-    }); %>-->
-  <span></span> <!--<%- tags.join('') %>-->
-  
-  
-  <a href="/tags/#ethereum">ethereum</a>
-  
-  <a href="/tags/#以太坊">以太坊</a>
-  
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-</div>
-
-</footer>
-
-    </article>
-
-
-
-
-
-
-  
-  
-  
-  
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
+	<article itemprop="articleBody"> 
+	<header class="article-info clearfix">
   <h1 itemprop="name">
     
       <a href="/distributed/2018/06/03/zookeeper-basics/" title="Zookeeper基础" itemprop="url">Zookeeper基础</a>
   </h1>
+  <p class="article-pv">
+    <span id="busuanzi_container_page_pv">访问量： <span id="busuanzi_value_page_pv"></span></span>
+    <p/>
   <p class="article-author">By
        
 		<a href="/about" title="xiabo2011" target="_blank" itemprop="author">xiabo2011</a>
 		
   </p>
   <p class="article-time">
-    <time datetime="2018-06-03 08:01:01 +0800" itemprop="datePublished">  2018-06-03</time>
-
+    <time datetime="2018-06-03 08:01:01 +0800" itemprop="datePublished"> 发表于 2018-06-03</time>
+    
   </p>
 </header>
-    <div class="article-content">
-        
-        <p>一般设计一个分布式协同服务都会提供一组primitives的列表，对于每个primitive暴露一些接口来创建实例，比如分布式锁可以作为一个primitive，
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article toc-content" style="display: none;">
+		
+			<!--<%- toc(item.content) %>-->
+		
+		</div>
+		
+		<p>一般设计一个分布式协同服务都会提供一组primitives的列表，对于每个primitive暴露一些接口来创建实例，比如分布式锁可以作为一个primitive，
 它暴露了一些接口如create, acquire, release等。这种设计会存在一些问题：1）扩展性差，需要提供大量的primitives，还要不断扩展API；
 2）灵活性差，对于不同应用适用性会差的较多</p>
 
+<p>Zookeeper的设计并没有直接暴露primitives，而是暴露了一组类似操作文件系统的API来帮助不同应用构建自己的primitives。Zookeeper允许操作
+小的数据节点，被称为<strong><em>znode</em></strong>。<strong><em>znode</em></strong>按照树的层级关系组织起来，如下图所示：</p>
 
-        
-        
-        <p class="article-more-link">
-          
-            <a href="/distributed/2018/06/03/zookeeper-basics/#more">Read More</a>
-          
-       </p>
-    </div>
-    
-    <footer class="article-footer clearfix">
+<p><img height="220" src="/images/zookeeper1.png" /></p>
+
+<p>Zookeeper的znode中的数据是以byte array形式存储的，byte arrays的具体格式（如Protocol Buffers, Thrift, Avr）是由具体应用自己指定的，
+Zookeeper本身不支持对各种格式parse。</p>
+
+<h2 id="zookeeper支持的api包括">Zookeeper支持的API包括：</h2>
+<ul>
+  <li>create /path data</li>
+  <li>delete /path</li>
+  <li>get /path</li>
+  <li>set /path data</li>
+  <li>ls /path</li>
+  <li>stat /path</li>
+</ul>
+
+<p>Note: 具体API操作说明可以通过help命令查看</p>
+
+<h2 id="znode的模式">ZNode的模式</h2>
+<ul>
+  <li>persistent
+    <ul>
+      <li><em>create</em>命令默认创建的模式，只有通过<em>delete</em>操作才能删除掉</li>
+    </ul>
+  </li>
+  <li>ephemeral
+    <ul>
+      <li>可以通过<em>create -e</em>命令创建，显示<em>delete</em>或连接session过期都能删除掉</li>
+    </ul>
+  </li>
+  <li>persistent_sequential
+    <ul>
+      <li>可以通过<em>create -s</em>命令创建，如连续三次执行<em>create -s /tasks/task- ““</em>会创建<em>task-0000000000</em>，<em>task-0000000001</em>，
+  <em>task-0000000002</em>三个节点</li>
+    </ul>
+  </li>
+  <li>ephemeral_sequential
+    <ul>
+      <li>可以通过<em>create -e -s</em>命令创建</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="watch">Watch</h2>
+<p>Zookeeper的client如何知道znode的数据或状态发生变化呢？Zookeeper采用notification的机制，允许client通过对znode设置一个watch来注册接收
+notification。<em>Watch</em>是一次性的，一个watch只能接收一次notification。如下图所示：</p>
+
+<p><img height="220" src="/images/zookeeper2.png" /></p>
+
+<p>client每次收到notification之后都需要设置一个新的<em>watch</em>，这期间znode可能会发生新的变化，有人会觉得新的变化会被client错过，但实际上每次
+设置<em>watch</em>都会伴随着一次读操作，所以不会错过任何状态变化。</p>
+
+<h2 id="version">Version</h2>
+<p>有些API操作需要client带上znode的version作为参数，只有version与server当前的version一致时候，操作才能生效，这样确保在并发操作的情况下
+正确性，如图所示：</p>
+
+<p><img height="220" src="/images/zookeeper3.png" /></p>
+
+<h2 id="zookeeper架构">Zookeeper架构</h2>
+<p>Zookeeper整体架构如下图所示：</p>
+
+<p><img height="250" src="/images/zookeeper4.png" /></p>
+
+<h3 id="zookeeper-quorum">Zookeeper Quorum</h3>
+<p><em>quorum</em>是需要参加投票的最少的server个数，也是确保client数据安全保存了的最小server数目。
+Zookeeper集群server的数量最好是奇数。</p>
+
+<h3 id="sessions">Sessions</h3>
+<p>Client提交到zookeeper的所有操作都是关联到某一个session的。当session结束时，session内创建的所有ephemeral节点全部被删除。
+同一session内的API操作能确保FIFO。client建立的session如果失去了与当前server的连接，client library能确保client重新与其它server建立连接，
+但仍沿用同一个session id。</p>
+
+  
+	</div>
+	<footer class="article-footer clearfix">
 <div class="article-catetags">
 
 <div class="article-categories">
@@ -444,124 +245,52 @@ $ brew install ethereum
 
 
 
-
-<div class="comments-count">
+	<div class="article-share" id="share">
 	
-</div>
+	  <div data-url="/distributed/2018/06/03/zookeeper-basics/" data-title="Zookeeper基础 | 行胜于言" data-tsina="" class="share clearfix">
+	  </div>
+	
+	</div>
+
 
 </footer>
-
-    </article>
-
-
-
-
-
-
-  
-  
-  
-  
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/distributed/2018/06/02/zookeeper-getting-started/" title="Zookeeper服务器集群搭建" itemprop="url">Zookeeper服务器集群搭建</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="xiabo2011" target="_blank" itemprop="author">xiabo2011</a>
-		
-  </p>
-  <p class="article-time">
-    <time datetime="2018-06-02 08:01:01 +0800" itemprop="datePublished">  2018-06-02</time>
-
-  </p>
-</header>
-    <div class="article-content">
-        
-        <h2 id="获取zookeeper">获取zookeeper</h2>
-<p>从apache zookeeper官网上获取zookeeper</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>https://www.apache.org/dyn/closer.cgi/zookeeper/
-</code></pre></div></div>
-
-
-        
-        
-        <p class="article-more-link">
-          
-            <a href="/distributed/2018/06/02/zookeeper-getting-started/#more">Read More</a>
-          
-       </p>
-    </div>
-    
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <!--
-  <%- list_categories(item.categories, {
-      show_count: false,
-      class: 'article-category',
-      style: 'none',
-      separator: '►'
-  }) %>
-  -->
-  
-  <a class="article-category-link" href="/categories/#distributed">distributed</a>
-  
-</div>
-
-
-  <div class="article-tags">
-  <!--
-  <% var tags = [];
-    item.tags.forEach(function(tag){
-      tags.push('<a href="' + config.root + tag.path + '">' + tag.name + '</a>');
-    }); %>-->
-  <span></span> <!--<%- tags.join('') %>-->
-  
-  
-  <a href="/tags/#zookeeper">zookeeper</a>
-  
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
+   
+	</article>
 	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/distributed/2018/06/02/zookeeper-getting-started/" title="Zookeeper服务器集群搭建">
+  <strong>上一篇：</strong><br/>
+  <span>
+  Zookeeper服务器集群搭建</span>
+</a>
 </div>
 
-</footer>
 
-    </article>
-
-
-
-
-
-
-
-  <nav id="page-nav" class="clearfix">
-  <nav id="page-nav" class="clearfix">
-    
-    
-    <span class="page-number current">1</span>
-    
-    
-     
-  </nav>
-  </nav>
-
+<div class="next">
+<a href="/blockchain/2018/06/30/local-private-ethereum/"  title="搭建本地以太坊私链">
+ <strong>下一篇：</strong><br/> 
+ <span>搭建本地以太坊私链
+</span>
+</a>
 </div>
+
+</nav>
+
+	
+
+</div>  
+
       
       
       <div class="openaside"><a class="navbutton" href="#" title="Show Sidebar"></a></div>
+
+  <div id="toc" class="toc-aside toc-content">
+ 
+ <!--<%- toc(item.content) %>-->
+ 
+  </div>
 
 <div id="asidepart">
 <div class="closeaside"><a class="closebutton" href="#" title="Hide Sidebar"></a></div>
@@ -755,6 +484,8 @@ $(document).ready(function(){
       a.css('display', 'block').removeClass('fadeOut');
       o.css('display', 'none');
       
+      $('#toc.toc-aside').css('display', 'none');
+      
     }
   });
 });
@@ -779,9 +510,108 @@ $(document).ready(function() {
 
 
 
+<script type="text/javascript">
+$(document).ready(function(){
+  $('#toc.toc-aside').toc({
+    title: "文章目录",
+    showEffect: "none"
+  });
+  $('#toc.toc-article').toc({
+    title: "文章目录",
+    showEffect: "show",
+    showSpeed: 0
+  });
+});
+</script>
 
 
 
+<script type="text/javascript">
+$(document).ready(function(){
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+
+<script type="text/javascript">
+$(document).ready(function(){
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<div class="hoverqrcode clearfix"></div>',
+  '<a class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#nothing"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+/*
+  $('.hoverqrcode').hide();
+
+  var myWidth = 0;
+  function updatehoverqrcode(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+    var qrsize = myWidth > 1024 ? 200:100;
+    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
+    var p = $('.article-share-qrcode').position();
+    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
+                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
+                          .qrcode(options);
+  };
+  $(window).resize(function(){
+    $('.hoverqrcode').hide();
+  });
+  $('.article-share-qrcode').click(function(){
+    updatehoverqrcode();
+    $('.hoverqrcode').toggle();
+  });
+  $('.article-share-qrcode').hover(function(){}, function(){
+      //$('.hoverqrcode').hide();
+  });
+  */
+});
+</script>
 
 
 
@@ -895,5 +725,5 @@ var _hmt = _hmt || [];
 <!-- Tiny_search End -->
 
   </body>
- </html>
+</html>
 

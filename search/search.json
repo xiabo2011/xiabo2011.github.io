@@ -1,0 +1,62 @@
+
+
+
+
+[
+  
+  
+    
+    
+      {
+        "title": "Zookeeper服务器集群搭建",
+        "date": "2018 年 06 月",
+        "excerpt": "获取zookeeper\n从apache zookeeper官网上获取zookeeper\nhttps://www.apache.org/dyn/closer.cgi/zookeeper/\n\n\n",
+        
+        "url": "/distributed/2018/06/02/zookeeper-getting-started/"
+      },
+    
+      {
+        "title": "Zookeeper基础",
+        "date": "2018 年 06 月",
+        "excerpt": "一般设计一个分布式协同服务都会提供一组primitives的列表，对于每个primitive暴露一些接口来创建实例，比如分布式锁可以作为一个primitive，\n它暴露了一些接口如create, acquire, release等。这种设计会存在一些问题：1）扩展性差，需要提供大量的primitives，还要不断扩展API；\n2）灵活性差，对于不同应用适用性会差的较多\n\n",
+        
+        "url": "/distributed/2018/06/03/zookeeper-basics/"
+      },
+    
+      {
+        "title": "搭建本地以太坊私链",
+        "date": "2018 年 06 月",
+        "excerpt": "macOS以太坊安装\n$ brew tap ethereum/ethereum\n$ brew install ethereum\n\n\n",
+        
+        "url": "/blockchain/2018/06/30/local-private-ethereum/"
+      },
+    
+      {
+        "title": "在本地私链上运行智能合约",
+        "date": "2018 年 06 月",
+        "excerpt": "准备工作\n\n  根据上一篇blog搭建私链\n  下载 remix-ide，我们这里要下载gh-pages分支，该分支为最新的稳定的build。remix-ide是一个用来编译运行智能合约的ide工具\n\n\n",
+        
+        "url": "/blockchain/2018/06/30/first-smart-contract/"
+      },
+    
+      {
+        "title": "Zookeeper API使用",
+        "date": "2018 年 08 月",
+        "excerpt": "Zookeeper session\n通过org.apache.zookeeper.Zookeeper类构建zookeeper session\nZookeeper(\n    String connectString,   // servers address e.g.: \"127.0.0.1:2181,127.0.0.1:2182,127.0.0.1:2183\"\n    int sessionTimeout,     // session timeout in millisecond\n    Watcher watcher         // 用来接收session event, watcher是接口，需要传递一个实现接口的实例化object\n)\n\n\n",
+        
+        "url": "/distributed/2018/08/26/zookeeper-api/"
+      },
+    
+  
+  
+  
+  {
+    "title": "About me",
+    "date": " ",
+    "excerpt": "\n",
+    
+    "url": "/about/"
+  }
+  
+]
+
