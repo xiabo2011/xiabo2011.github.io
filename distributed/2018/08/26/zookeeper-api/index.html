@@ -130,7 +130,7 @@
 		</div>
 		
 		<h2 id="zookeeper-session">Zookeeper session</h2>
-<p>通过org.apache.zookeeper.Zookeeper类构建zookeeper session</p>
+<p>Zookeeper client通过创建一个session与Zookeeper server通信，如果与某一台server的连接断了，session会转移到与另一台server建立的连接。通过org.apache.zookeeper.Zookeeper类构建zookeeper session</p>
 <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">Zookeeper</span><span class="o">(</span>
     <span class="n">String</span> <span class="n">connectString</span><span class="o">,</span>   <span class="c1">// servers address e.g.: "127.0.0.1:2181,127.0.0.1:2182,127.0.0.1:2183"</span>
     <span class="kt">int</span> <span class="n">sessionTimeout</span><span class="o">,</span>     <span class="c1">// session timeout in millisecond</span>
@@ -427,7 +427,7 @@ None表示WatchEvent用来记录zk session的状态变化</li>
     <ul>
         
           <li>
-            <a href="https://github.com/xiaobo2011" target="_blank" title="xiabo2011 github">xiabo2011 github</a>
+            <a href="https://github.com/xiabo2011" target="_blank" title="xiabo2011 github">xiabo2011 github</a>
           </li>
         
           <li>
@@ -443,7 +443,7 @@ None表示WatchEvent用来记录zk session的状态变化</li>
   
 <div class="github-card">
 <p class="asidetitle">Github 名片</p>
-<div class="github-card" data-github="xiaobo2011" data-width="220" data-height="119" data-theme="medium">
+<div class="github-card" data-github="xiabo2011" data-width="220" data-height="119" data-theme="medium">
 <script type="text/javascript" src="//cdn.jsdelivr.net/github-cards/latest/widget.js" ></script>
 </div>
 </div>
@@ -474,7 +474,7 @@ None表示WatchEvent用来记录zk session的状态变化</li>
 	<div class="social-font" class="clearfix">
 		
 		
-		<a href="https://github.com/xiaobo2011" target="_blank" class="icon-github" title="github"></a>
+		<a href="https://github.com/xiabo2011" target="_blank" class="icon-github" title="github"></a>
 		
 		
 		

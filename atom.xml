@@ -4,7 +4,7 @@
  <title>行胜于言</title>
  <link href="/atom.xml" rel="self"/>
  <link href=""/>
- <updated>2018-08-30T23:54:57+08:00</updated>
+ <updated>2018-09-02T00:25:20+08:00</updated>
  <id></id>
  <author>
    <name>xiabo2011</name>
@@ -18,7 +18,7 @@
    <updated>2018-08-26T08:01:01+08:00</updated>
    <id>/distributed/2018/08/26/zookeeper-api</id>
    <content type="html">&lt;h2 id=&quot;zookeeper-session&quot;&gt;Zookeeper session&lt;/h2&gt;
-&lt;p&gt;通过org.apache.zookeeper.Zookeeper类构建zookeeper session&lt;/p&gt;
+&lt;p&gt;Zookeeper client通过创建一个session与Zookeeper server通信，如果与某一台server的连接断了，session会转移到与另一台server建立的连接。通过org.apache.zookeeper.Zookeeper类构建zookeeper session&lt;/p&gt;
 &lt;div class=&quot;language-java highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;Zookeeper&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;
     &lt;span class=&quot;n&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;connectString&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;   &lt;span class=&quot;c1&quot;&gt;// servers address e.g.: &quot;127.0.0.1:2181,127.0.0.1:2182,127.0.0.1:2183&quot;&lt;/span&gt;
     &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sessionTimeout&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;     &lt;span class=&quot;c1&quot;&gt;// session timeout in millisecond&lt;/span&gt;

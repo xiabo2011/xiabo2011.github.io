@@ -42,7 +42,7 @@
       {
         "title": "Zookeeper API使用",
         "date": "2018 年 08 月",
-        "excerpt": "Zookeeper session\n通过org.apache.zookeeper.Zookeeper类构建zookeeper session\nZookeeper(\n    String connectString,   // servers address e.g.: \"127.0.0.1:2181,127.0.0.1:2182,127.0.0.1:2183\"\n    int sessionTimeout,     // session timeout in millisecond\n    Watcher watcher         // 用来接收session event, watcher是接口，需要传递一个实现接口的实例化object\n)\n\n\n",
+        "excerpt": "Zookeeper session\nZookeeper client通过创建一个session与Zookeeper server通信，如果与某一台server的连接断了，session会转移到与另一台server建立的连接。通过org.apache.zookeeper.Zookeeper类构建zookeeper session\nZookeeper(\n    String connectString,   // servers address e.g.: \"127.0.0.1:2181,127.0.0.1:2182,127.0.0.1:2183\"\n    int sessionTimeout,     // session timeout in millisecond\n    Watcher watcher         // 用来接收session event, watcher是接口，需要传递一个实现接口的实例化object\n)\n\n\n",
         
         "url": "/distributed/2018/08/26/zookeeper-api/"
       },
