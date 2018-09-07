@@ -135,7 +135,7 @@ if (page.archive){
     
     <li class="archive-list-item">
     <a class="archive-list-link" href="#zookeeper">zookeeper</a>
-    <span class="archive-list-count">3</span>
+    <span class="archive-list-count">4</span>
     </li>
     
     <li class="archive-list-item">
@@ -148,6 +148,11 @@ if (page.archive){
     <span class="archive-list-count">2</span>
     </li>
     
+    <li class="archive-list-item">
+    <a class="archive-list-link" href="#dubbo">dubbo</a>
+    <span class="archive-list-count">1</span>
+    </li>
+    
  </div>
  </ul>
  
@@ -155,6 +160,42 @@ if (page.archive){
 </div>
 <div id="main" class="archive-part clearfix">
   <div id="archive-page">
+  
+  
+  
+  
+<section class="post dubbo " itemscope itemprop="blogPost">
+
+
+  
+    <a href="/distributed/2018/09/02/dubbo-loadbalance/" title="Dubbo一致性哈希遇到的坑" itemprop="url">
+  
+
+    <time datetime="2018-09-02 08:01:01 +0800" itemprop="datePublished">2018 年 09 月</time>
+
+
+    <h1 itemprop="name">Dubbo一致性哈希遇到的坑</h1>
+
+  </a>
+</section>
+  
+  
+  
+  
+<section class="post zookeeper " itemscope itemprop="blogPost">
+
+
+  
+    <a href="/distributed/2018/09/02/zookeeper-curator/" title="Zookeeper Curator" itemprop="url">
+  
+
+    <time datetime="2018-09-02 08:01:01 +0800" itemprop="datePublished">2018 年 09 月</time>
+
+
+    <h1 itemprop="name">Zookeeper Curator</h1>
+
+  </a>
+</section>
   
   
   
@@ -376,11 +417,13 @@ $(document).ready(function(){
 $(document).ready(function() {
   var tags = [
     
-    { "name": "zookeeper", "path": "/tags/#zookeeper", "length": 3 },
+    { "name": "zookeeper", "path": "/tags/#zookeeper", "length": 4 },
     
     { "name": "ethereum", "path": "/tags/#ethereum", "length": 2 },
     
     { "name": "以太坊", "path": "/tags/#以太坊", "length": 2 },
+    
+    { "name": "dubbo", "path": "/tags/#dubbo", "length": 1 },
     
   ];
   $("#tagcloud").html(tagcloudHelper(tags));

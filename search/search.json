@@ -47,6 +47,22 @@
         "url": "/distributed/2018/08/26/zookeeper-api/"
       },
     
+      {
+        "title": "Zookeeper Curator",
+        "date": "2018 年 09 月",
+        "excerpt": "Curator是一个Zookeeper的客户端库，是一个分布式协调服务，来帮助你管理zookeeper的连接，减少使用zookeeper的复杂性。\n它包含了一套高级API和通用的utilities，提供了一些recipes（如lock，barriers和cache等）和操作（如create, delete, getData等）,\n这些都使得编写的应用可以更加鲁棒。\n\n",
+        
+        "url": "/distributed/2018/09/02/zookeeper-curator/"
+      },
+    
+      {
+        "title": "Dubbo一致性哈希遇到的坑",
+        "date": "2018 年 09 月",
+        "excerpt": "关于dubbo的负载均衡策略已经有太多blog介绍了，这里说一下我在使用dubbo一致性哈希负载均衡策略时候遇到的一个坑。\n\n",
+        
+        "url": "/distributed/2018/09/02/dubbo-loadbalance/"
+      },
+    
   
   
   

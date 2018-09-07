@@ -11,6 +11,8 @@
 /sitemap.txt
 /assets/css/style.css
 
+/distributed/2018/09/02/dubbo-loadbalance/
+/distributed/2018/09/02/zookeeper-curator/
 /distributed/2018/08/26/zookeeper-api/
 /blockchain/2018/06/30/first-smart-contract/
 /blockchain/2018/06/30/local-private-ethereum/
