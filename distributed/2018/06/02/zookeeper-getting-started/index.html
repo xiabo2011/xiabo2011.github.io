@@ -131,14 +131,14 @@
 		
 		<h2 id="获取zookeeper">获取zookeeper</h2>
 <p>从apache zookeeper官网上获取zookeeper</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>https://www.apache.org/dyn/closer.cgi/zookeeper/
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>https://www.apache.org/dyn/closer.cgi/zookeeper/
 </code></pre></div></div>
 
 <h2 id="zkserversh">zkServer.sh</h2>
 <h3 id="配置集群">配置集群</h3>
 <p>可以在本机上模拟集群搭建，不同server用不同port即可。可以在 <strong>/conf</strong>目录下创建三个cfg文件：zoo1.cfg, zoo2,cfg, zoo3.cfg, 分别赋予
 不同的clientPort（如2181，2182，2183）和dataDir (“./data/zk1”, “./data/zk2”, “./data/zk3”)，其他的配置保持一致，具体配置如下</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># The number of milliseconds of each tick
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># The number of milliseconds of each tick
 tickTime=2000
 # The number of ticks that the initial
 # synchronization phase can take
@@ -160,24 +160,24 @@ server.3=localhost:2883:3883
 
 </code></pre></div></div>
 <p>在dataDir指定的路径下创建myid文件</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ echo 1 &gt; ./data/zk1/myid
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ echo 1 &gt; ./data/zk1/myid
 $ echo 2 &gt; ./data/zk2/myid
 $ echo 3 &gt; ./data/zk3/myid
 </code></pre></div></div>
 
 <h3 id="启动zk集群">启动zk集群</h3>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ bin/zkServer.sh start conf/zoo1.cfg
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ bin/zkServer.sh start conf/zoo1.cfg
 $ bin/zkServer.sh start conf/zoo2.cfg
 $ bin/zkServer.sh start conf/zoo3.cfg
 </code></pre></div></div>
 <p>zk server的log会记录到zookeeper.out。如果为了方便测试查看server log，可以采用下面命令启动server</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ bin/zkServer.sh start-foreground conf/zoo1.cfg
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ bin/zkServer.sh start-foreground conf/zoo1.cfg
 </code></pre></div></div>
 
 <h3 id="集群测试">集群测试</h3>
 <p>可以用zk自带的zkCli.sh对搭建的集群进行一些测试，如创建一个/tmp节点，然后添加test子节点数据。首先需要用<a href="#zk-client"><strong>zkCli.sh</strong></a>
 连接到server。</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>...] create /tmp ""
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>...] create /tmp ""
 ...] create /tmp/test "abc"
 ...] get /tmp
 ...] get /tmp/test
@@ -187,12 +187,12 @@ $ bin/zkServer.sh start conf/zoo3.cfg
 
 <h2 id="zkclish"><a name="zk-client"></a>zkCli.sh</h2>
 <p>通过zkCli.sh连接zookeeper服务器的命令</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ bin/zkCli.sh -server 127.0.0.1:2181
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ bin/zkCli.sh -server 127.0.0.1:2181
 </code></pre></div></div>
 <p>这种方式存在的问题是一旦2181端口对应的server挂掉，client会一直尝试连接，并且失败。当2181端口对应的server重启后，client会报连接失败，
 session过期，connection会被close掉，
 所以-server参数最好带上所有的server地址。</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ bin/zkCli.sh -server 127.0.0.1:2181,127.0.0.1:2182,127.0.0.1:2183
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ bin/zkCli.sh -server 127.0.0.1:2181,127.0.0.1:2182,127.0.0.1:2183
 </code></pre></div></div>
 <p>当zookeeper集群有server有机器挂掉，存在下面几种情况</p>
 <ul>
@@ -252,7 +252,7 @@ session过期，connection会被close掉，
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="/distributed/2018/06/02/zookeeper-getting-started/" data-title="Zookeeper服务器集群搭建 | 行胜于言" data-tsina="" class="share clearfix">
+	  <div data-url="http://localhost:4000/distributed/2018/06/02/zookeeper-getting-started/" data-title="Zookeeper服务器集群搭建 | 行胜于言" data-tsina="" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -658,14 +658,14 @@ $(document).ready(function(){
 <!--
 <script type="text/javascript">
 var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
-document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3Fc3cc97040f830d40ad7e7db9ad1875da' type='text/javascript'%3E%3C/script%3E"));
+document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F1ec5d68567dd06f62d35b049a2a89a41' type='text/javascript'%3E%3C/script%3E"));
 </script>
 -->
 <script>
 var _hmt = _hmt || [];
 (function() {
   var hm = document.createElement("script");
-  hm.src = "https://hm.baidu.com/hm.js?c3cc97040f830d40ad7e7db9ad1875da";
+  hm.src = "https://hm.baidu.com/hm.js?1ec5d68567dd06f62d35b049a2a89a41";
   var s = document.getElementsByTagName("script")[0];
   s.parentNode.insertBefore(hm, s);
 })();

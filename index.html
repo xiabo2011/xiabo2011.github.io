@@ -295,10 +295,10 @@
         
         <h2 id="zookeeper-session">Zookeeper session</h2>
 <p>Zookeeper client通过创建一个session与Zookeeper server通信，如果与某一台server的连接断了，session会转移到与另一台server建立的连接。通过org.apache.zookeeper.Zookeeper类构建zookeeper session</p>
-<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">Zookeeper</span><span class="o">(</span>
-    <span class="n">String</span> <span class="n">connectString</span><span class="o">,</span>   <span class="c1">// servers address e.g.: "127.0.0.1:2181,127.0.0.1:2182,127.0.0.1:2183"</span>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">Zookeeper</span><span class="o">(</span>
+    <span class="nc">String</span> <span class="n">connectString</span><span class="o">,</span>   <span class="c1">// servers address e.g.: "127.0.0.1:2181,127.0.0.1:2182,127.0.0.1:2183"</span>
     <span class="kt">int</span> <span class="n">sessionTimeout</span><span class="o">,</span>     <span class="c1">// session timeout in millisecond</span>
-    <span class="n">Watcher</span> <span class="n">watcher</span>         <span class="c1">// 用来接收session event, watcher是接口，需要传递一个实现接口的实例化object</span>
+    <span class="nc">Watcher</span> <span class="n">watcher</span>         <span class="c1">// 用来接收session event, watcher是接口，需要传递一个实现接口的实例化object</span>
 <span class="o">)</span>
 </code></pre></div></div>
 
@@ -477,7 +477,7 @@
     <div class="article-content">
         
         <h2 id="macos以太坊安装">macOS以太坊安装</h2>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ brew tap ethereum/ethereum
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ brew tap ethereum/ethereum
 $ brew install ethereum
 </code></pre></div></div>
 
@@ -655,7 +655,7 @@ $ brew install ethereum
         
         <h2 id="获取zookeeper">获取zookeeper</h2>
 <p>从apache zookeeper官网上获取zookeeper</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>https://www.apache.org/dyn/closer.cgi/zookeeper/
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>https://www.apache.org/dyn/closer.cgi/zookeeper/
 </code></pre></div></div>
 
 
@@ -1003,14 +1003,14 @@ $(document).ready(function(){
 <!--
 <script type="text/javascript">
 var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
-document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3Fc3cc97040f830d40ad7e7db9ad1875da' type='text/javascript'%3E%3C/script%3E"));
+document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F1ec5d68567dd06f62d35b049a2a89a41' type='text/javascript'%3E%3C/script%3E"));
 </script>
 -->
 <script>
 var _hmt = _hmt || [];
 (function() {
   var hm = document.createElement("script");
-  hm.src = "https://hm.baidu.com/hm.js?c3cc97040f830d40ad7e7db9ad1875da";
+  hm.src = "https://hm.baidu.com/hm.js?1ec5d68567dd06f62d35b049a2a89a41";
   var s = document.getElementsByTagName("script")[0];
   s.parentNode.insertBefore(hm, s);
 })();

@@ -137,7 +137,7 @@
 
 <h2 id="启动私链节点">启动私链节点</h2>
 <p>相比于上一篇blog提到的启动命令，这里加入rpc相关的参数</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ geth --datadir "$ethereum_home/eth2" --port 30304 --nodiscover --networkid 1234 --rpcport 8545 --rpccorsdomain "*" --unlock 0 console 2&gt;&gt;eth2.log
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ geth --datadir "$ethereum_home/eth2" --port 30304 --nodiscover --networkid 1234 --rpcport 8545 --rpccorsdomain "*" --unlock 0 console 2&gt;&gt;eth2.log
 </code></pre></div></div>
 <p>”–unlock 0”表示要求unlock eth.accounts[0]，在提示输入Passphrase后就会解锁eth.accounts[0]</p>
 
@@ -182,7 +182,7 @@ contract Adder {
 同样我们可以在geth console上调用智能合约。我们需要拷贝下图中所示的ABI内容和上图中的Adder Address，分别赋值给变量abi和address。
 <img height="220" src="/images/blockchain3.png" /></p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt; var abi=[{"constant":true,"inputs":[],"name":"getName","outputs":[{"name":"","type":"string"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"a","type":"int256"},{"name":"b","type":"int256"}],"name":"add","outputs":[{"name":"","type":"int256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_name","type":"string"}],"name":"setName","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"}]
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt; var abi=[{"constant":true,"inputs":[],"name":"getName","outputs":[{"name":"","type":"string"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"a","type":"int256"},{"name":"b","type":"int256"}],"name":"add","outputs":[{"name":"","type":"int256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_name","type":"string"}],"name":"setName","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"}]
 &gt; var address="0x3bf0b1d614df44a610865d62edc27bae12204c55"
 &gt; var adder=eth.contract(abi).at(address)
 &gt; eth.defaultAccount=eth.accounts[0]
@@ -252,7 +252,7 @@ contract Adder {
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="/blockchain/2018/06/30/first-smart-contract/" data-title="在本地私链上运行智能合约 | 行胜于言" data-tsina="" class="share clearfix">
+	  <div data-url="http://localhost:4000/blockchain/2018/06/30/first-smart-contract/" data-title="在本地私链上运行智能合约 | 行胜于言" data-tsina="" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -666,14 +666,14 @@ $(document).ready(function(){
 <!--
 <script type="text/javascript">
 var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
-document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3Fc3cc97040f830d40ad7e7db9ad1875da' type='text/javascript'%3E%3C/script%3E"));
+document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F1ec5d68567dd06f62d35b049a2a89a41' type='text/javascript'%3E%3C/script%3E"));
 </script>
 -->
 <script>
 var _hmt = _hmt || [];
 (function() {
   var hm = document.createElement("script");
-  hm.src = "https://hm.baidu.com/hm.js?c3cc97040f830d40ad7e7db9ad1875da";
+  hm.src = "https://hm.baidu.com/hm.js?1ec5d68567dd06f62d35b049a2a89a41";
   var s = document.getElementsByTagName("script")[0];
   s.parentNode.insertBefore(hm, s);
 })();

@@ -130,50 +130,50 @@
 		</div>
 		
 		<h2 id="macos以太坊安装">macOS以太坊安装</h2>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ brew tap ethereum/ethereum
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ brew tap ethereum/ethereum
 $ brew install ethereum
 </code></pre></div></div>
 
 <h2 id="创建ethereum_home">创建ethereum_home</h2>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ cd ~
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ cd ~
 $ mkdir ethereum
 $ echo 'export ethereum_home=$HOME/ethereum' &gt;&gt; ~/.zshrc
 $ source ~/.zshrc
 </code></pre></div></div>
 <h2 id="创建创世纪genesis文件">创建创世纪(Genesis)文件</h2>
 <p>创世纪区块是区块链上的第一个区块，Genesis文件是一个JSON文件，描述了初始区块的特性。</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ cd $ethereum_home
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ cd $ethereum_home
 $ touch genesis.json
 </code></pre></div></div>
 <p><strong>genesis.json</strong>内容如下：</p>
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-    </span><span class="s2">"nonce"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0x0000000000000042"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"timestamp"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0x0"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"parentHash"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0x0000000000000000000000000000000000000000000000000000000000000000"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"extraData"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0x"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"gasLimit"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0x8000000"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"difficulty"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0x400"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"config"</span><span class="p">:{},</span><span class="w">
-    </span><span class="s2">"mixhash"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0x0000000000000000000000000000000000000000000000000000000000000000"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"coinbase"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0x3333333333333333333333333333333333333333"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"alloc"</span><span class="p">:</span><span class="w"> </span><span class="p">{}</span><span class="w">
+    </span><span class="nl">"nonce"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0x0000000000000042"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"timestamp"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0x0"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"parentHash"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0x0000000000000000000000000000000000000000000000000000000000000000"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"extraData"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0x"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"gasLimit"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0x8000000"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"difficulty"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0x400"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"config"</span><span class="p">:{},</span><span class="w">
+    </span><span class="nl">"mixhash"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0x0000000000000000000000000000000000000000000000000000000000000000"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"coinbase"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0x3333333333333333333333333333333333333333"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"alloc"</span><span class="p">:</span><span class="w"> </span><span class="p">{}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 <h2 id="启动以太坊node">启动以太坊Node</h2>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ geth --datadir "$ethereum_home/eth1" init "$ethereum_home/genesis.json"
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ geth --datadir "$ethereum_home/eth1" init "$ethereum_home/genesis.json"
 $ geth --datadir "$ethereum_home/eth1" --networkid 1234 console 2&gt;&gt;eth1.log
 </code></pre></div></div>
 <p>通过geth.ipc可以将多个终端attach同一个console</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ geth attach ipc:$ethereum_home/eth1/geth.ipc
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ geth attach ipc:$ethereum_home/eth1/geth.ipc
 </code></pre></div></div>
 
 <h2 id="启动peer-node">启动Peer Node</h2>
 <p>采用同样的genesis.json</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ geth --datadir "$ethereum_home/eth2" init "$ethereum_home/genesis.json"
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ geth --datadir "$ethereum_home/eth2" init "$ethereum_home/genesis.json"
 $ geth --datadir "$ethereum_home/eth2" --port 30304 --nodiscover --networkid 1234 console 2&gt;&gt;eth2.log
 </code></pre></div></div>
 <p>通过admin.nodeInfo获取enode</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt; admin.nodeInfo
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt; admin.nodeInfo
 {
   enode: "enode://30312c1a5e16a1698c3b901fec03d5ae81a094dd913f1a480d5d82fad0be26911b2d1abe2b63f0b21948aa0ab4815a70880ca7d8ac19c2abd047d2e75e77552a@[::]:30304?discport=0",
   id: "30312c1a5e16a1698c3b901fec03d5ae81a094dd913f1a480d5d82fad0be26911b2d1abe2b63f0b21948aa0ab4815a70880ca7d8ac19c2abd047d2e75e77552a",
@@ -199,17 +199,17 @@ $ geth --datadir "$ethereum_home/eth2" --port 30304 --nodiscover --networkid 123
 }
 </code></pre></div></div>
 <p>切换到console 1, admin.addPeer</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt; admin.addPeer("enode://30312c1a5e16a1698c3b901fec03d5ae81a094dd913f1a480d5d82fad0be26911b2d1abe2b63f0b21948aa0ab4815a70880ca7d8ac19c2abd047d2e75e77552a@[::]:30304?discport=0")
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt; admin.addPeer("enode://30312c1a5e16a1698c3b901fec03d5ae81a094dd913f1a480d5d82fad0be26911b2d1abe2b63f0b21948aa0ab4815a70880ca7d8ac19c2abd047d2e75e77552a@[::]:30304?discport=0")
 &gt; addmin.peers
 </code></pre></div></div>
 <p>运行<em>admin.peers</em>，我们可以看到peer的信息了</p>
 
 <h2 id="启动挖矿">启动挖矿</h2>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt; eth.blockNumber
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt; eth.blockNumber
 0
 </code></pre></div></div>
 <p>这里我们看到区块数目是0，因为还没有开始挖矿。挖矿前需要建立account，否则执行挖矿会报错（Error: etherbase missing）</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt; personal.newAccount('123456')
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt; personal.newAccount('123456')
 "0x9fc496826bc0745af978c7cad7d90ddee06a6293"
 &gt; miner.start(1)
 &gt; eth.blockNumber
@@ -219,7 +219,7 @@ $ geth --datadir "$ethereum_home/eth2" --port 30304 --nodiscover --networkid 123
 </code></pre></div></div>
 <p>我们可以在两个Node的Console上都可以看到blockNumber在不断增加，虽然只是在一个Node上进行挖矿。start(1)这里的1代表一个线程挖矿。
 通过下面命令可以获取block信息和最新的block对应的miner</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt; eth.getBlock(5)
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt; eth.getBlock(5)
 &gt; eth.getBlock(eth.blockNumber).miner
 </code></pre></div></div>
 <p>停止挖矿</p>
@@ -228,13 +228,13 @@ $ geth --datadir "$ethereum_home/eth2" --port 30304 --nodiscover --networkid 123
 
 <h2 id="测试交易">测试交易</h2>
 <p>新建一个账户，查看其余额</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt; personal.newAccount("123456)
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt; personal.newAccount("123456)
 0xd870d9a0cbfa37a53563f12a783fb697027f5668
 &gt; eth.getBalance("0xd870d9a0cbfa37a53563f12a783fb697027f5668")
 0
 </code></pre></div></div>
 <p>查看之前挖矿的账户余额，用之前账户转20 Wei</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt; eth.getBalance("0x9fc496826bc0745af978c7cad7d90ddee06a6293")
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt; eth.getBalance("0x9fc496826bc0745af978c7cad7d90ddee06a6293")
 1.01968750000000000002e+21
 &gt; eth.sendTransaction({from:"0x9fc496826bc0745af978c7cad7d90ddee06a6293", to:"0xd870d9a0cbfa37a53563f12a783fb697027f5668",value:20})
 Error: authentication needed: password or unlock
@@ -244,11 +244,11 @@ Error: authentication needed: password or unlock
     at &lt;anonymous&gt;:1:1
 </code></pre></div></div>
 <p>unlockAccount</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt; personal.unlockAccount("0x9fc496826bc0745af978c7cad7d90ddee06a6293")
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt; personal.unlockAccount("0x9fc496826bc0745af978c7cad7d90ddee06a6293")
 &gt; eth.sendTransaction({from:"0x9fc496826bc0745af978c7cad7d90ddee06a6293", to:"0xd870d9a0cbfa37a53563f12a783fb697027f5668",value:20})
 </code></pre></div></div>
 <p>这时候我们再次查看新账号余额会发现仍旧是0，这是因为我们之前停止了挖矿，重新开启挖矿，过几秒之后我们发现新账号余额增加了20 wei</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt; eth.getBalance("0xd870d9a0cbfa37a53563f12a783fb697027f5668")
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt; eth.getBalance("0xd870d9a0cbfa37a53563f12a783fb697027f5668")
 0
 &gt; miner.start(1)
 &gt; eth.getBalance("0xd870d9a0cbfa37a53563f12a783fb697027f5668")
@@ -260,7 +260,7 @@ Error: authentication needed: password or unlock
   <li>admin.*</li>
   <li>personal.*</li>
   <li>eth.*
-    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt; admin.nodeInfo
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt; admin.nodeInfo
 &gt; personal.newAccount()
 &gt; personal.listAccounts
 &gt; eth.blockNumber
@@ -309,7 +309,7 @@ Error: authentication needed: password or unlock
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="/blockchain/2018/06/30/local-private-ethereum/" data-title="搭建本地以太坊私链 | 行胜于言" data-tsina="" class="share clearfix">
+	  <div data-url="http://localhost:4000/blockchain/2018/06/30/local-private-ethereum/" data-title="搭建本地以太坊私链 | 行胜于言" data-tsina="" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -723,14 +723,14 @@ $(document).ready(function(){
 <!--
 <script type="text/javascript">
 var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
-document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3Fc3cc97040f830d40ad7e7db9ad1875da' type='text/javascript'%3E%3C/script%3E"));
+document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F1ec5d68567dd06f62d35b049a2a89a41' type='text/javascript'%3E%3C/script%3E"));
 </script>
 -->
 <script>
 var _hmt = _hmt || [];
 (function() {
   var hm = document.createElement("script");
-  hm.src = "https://hm.baidu.com/hm.js?c3cc97040f830d40ad7e7db9ad1875da";
+  hm.src = "https://hm.baidu.com/hm.js?1ec5d68567dd06f62d35b049a2a89a41";
   var s = document.getElementsByTagName("script")[0];
   s.parentNode.insertBefore(hm, s);
 })();

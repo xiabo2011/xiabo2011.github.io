@@ -137,7 +137,7 @@
 
 <h2 id="curator-client">Curator Client</h2>
 <p>和<a href="/distributed/2018/08/26/zookeeper-api/#more">上一篇</a>提到的使用Zookeeper Client类似，使用Curator Client，我们需要先创建一个CuratorFramework。</p>
-<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">CuratorFramework</span> <span class="n">zkClient</span> <span class="o">=</span> <span class="n">CuratorFrameworkFactory</span><span class="o">.</span><span class="na">newClient</span><span class="o">(</span>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">CuratorFramework</span> <span class="n">zkClient</span> <span class="o">=</span> <span class="nc">CuratorFrameworkFactory</span><span class="o">.</span><span class="na">newClient</span><span class="o">(</span>
     <span class="n">connectorString</span><span class="o">,</span>    <span class="c1">// servers address e.g.: "127.0.0.1:2181,127.0.0.1:2182,127.0.0.1:2183"</span>
     <span class="n">retryPolicy</span>         <span class="c1">// retry policy for retrying operations in the event of disconnections</span>
 <span class="o">);</span>
@@ -149,13 +149,13 @@
 <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">zk</span><span class="o">.</span><span class="na">create</span><span class="o">(</span>
     <span class="s">"/mypath"</span><span class="o">,</span>
     <span class="k">new</span> <span class="kt">byte</span><span class="o">[</span><span class="mi">0</span><span class="o">],</span>
-    <span class="n">ZooDefs</span><span class="o">.</span><span class="na">Ids</span><span class="o">.</span><span class="na">OPEN_ACL_UNSAFE</span><span class="o">,</span>
-    <span class="n">CreateMode</span><span class="o">.</span><span class="na">PERSISTENT</span>
+    <span class="nc">ZooDefs</span><span class="o">.</span><span class="na">Ids</span><span class="o">.</span><span class="na">OPEN_ACL_UNSAFE</span><span class="o">,</span>
+    <span class="nc">CreateMode</span><span class="o">.</span><span class="na">PERSISTENT</span>
 <span class="o">);</span>
 </code></pre></div></div>
 <p>而如果使用Curator的fluent API完成上面同样的事情应该像下面这样调用</p>
 <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">zkClient</span><span class="o">.</span><span class="na">create</span><span class="o">()</span>
-    <span class="o">.</span><span class="na">withMode</span><span class="o">(</span><span class="n">CreateMode</span><span class="o">.</span><span class="na">PERSISTENT</span><span class="o">)</span>
+    <span class="o">.</span><span class="na">withMode</span><span class="o">(</span><span class="nc">CreateMode</span><span class="o">.</span><span class="na">PERSISTENT</span><span class="o">)</span>
     <span class="o">.</span><span class="na">forPath</span><span class="o">(</span><span class="s">"/mypath"</span><span class="o">,</span> <span class="k">new</span> <span class="kt">byte</span><span class="o">[</span><span class="mi">0</span><span class="o">]);</span>
 </code></pre></div></div>
 <p>这种模式的调用不仅适用create，也适用其他操作如delete，setData, getData, checkExists和getChildren</p>
@@ -163,7 +163,7 @@
 <p>如果用异步的方式执行同样的操作，需要添加inBackground()调用:</p>
 <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">zkClient</span><span class="o">.</span><span class="na">create</span><span class="o">()</span>
     <span class="o">.</span><span class="na">inBackground</span><span class="o">()</span>
-    <span class="o">.</span><span class="na">withMode</span><span class="o">(</span><span class="n">CreateMode</span><span class="o">.</span><span class="na">PERSISTENT</span><span class="o">)</span>
+    <span class="o">.</span><span class="na">withMode</span><span class="o">(</span><span class="nc">CreateMode</span><span class="o">.</span><span class="na">PERSISTENT</span><span class="o">)</span>
     <span class="o">.</span><span class="na">forPath</span><span class="o">(</span><span class="s">"/mypath"</span><span class="o">,</span> <span class="k">new</span> <span class="kt">byte</span><span class="o">[</span><span class="mi">0</span><span class="o">]);</span>
 </code></pre></div></div>
 <p>同时当zk创建好了znode，我们还需要创建一个或者多个listener来接收callback，来完成异步调用的过程。</p>
@@ -175,8 +175,8 @@
 <h2 id="listener">Listener</h2>
 <p>Curator使用listener来处理callbacks和watch notification。
 实现一个处理callback和notification的listener，第一步我们需要按照下面的template</p>
-<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">CuratorListener</span> <span class="n">masterListener</span> <span class="o">=</span> <span class="k">new</span> <span class="n">CuratorListener</span><span class="o">()</span> <span class="o">{</span>
-    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">eventReceived</span><span class="o">(</span><span class="n">CuratorFramework</span> <span class="n">client</span><span class="o">,</span> <span class="n">CuratorEvent</span> <span class="n">event</span><span class="o">)</span> <span class="o">{</span>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">CuratorListener</span> <span class="n">masterListener</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">CuratorListener</span><span class="o">()</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">eventReceived</span><span class="o">(</span><span class="nc">CuratorFramework</span> <span class="n">client</span><span class="o">,</span> <span class="nc">CuratorEvent</span> <span class="n">event</span><span class="o">)</span> <span class="o">{</span>
         <span class="k">try</span> <span class="o">{</span>
             <span class="k">switch</span> <span class="o">(</span><span class="n">event</span><span class="o">.</span><span class="na">getType</span><span class="o">())</span> <span class="o">{</span>
                 <span class="k">case</span> <span class="nl">CHILDREN:</span>
@@ -192,12 +192,12 @@
                     <span class="o">...</span>
                     <span class="k">break</span><span class="o">;</span>
             <span class="o">}</span>
-        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
-            <span class="n">LOG</span><span class="o">.</span><span class="na">error</span><span class="o">(</span><span class="s">"Exception while processing event."</span><span class="o">,</span> <span class="n">e</span><span class="o">);</span>
+        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="nc">Exception</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+            <span class="no">LOG</span><span class="o">.</span><span class="na">error</span><span class="o">(</span><span class="s">"Exception while processing event."</span><span class="o">,</span> <span class="n">e</span><span class="o">);</span>
             <span class="k">try</span> <span class="o">{</span>
                 <span class="n">close</span><span class="o">();</span>
-            <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">IOException</span> <span class="n">ioe</span><span class="o">)</span> <span class="o">{</span>
-                <span class="n">LOG</span><span class="o">.</span><span class="na">error</span><span class="o">(</span><span class="s">"IOException while closing."</span><span class="o">,</span> <span class="n">ioe</span><span class="o">);</span>
+            <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="nc">IOException</span> <span class="n">ioe</span><span class="o">)</span> <span class="o">{</span>
+                <span class="no">LOG</span><span class="o">.</span><span class="na">error</span><span class="o">(</span><span class="s">"IOException while closing."</span><span class="o">,</span> <span class="n">ioe</span><span class="o">);</span>
             <span class="o">}</span>
         <span class="o">}</span>
     <span class="o">}</span>
@@ -207,13 +207,13 @@
 <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">zkClient</span><span class="o">.</span><span class="na">getCuratorListenable</span><span class="o">().</span><span class="na">addListener</span><span class="o">(</span><span class="n">masterListener</span><span class="o">);</span>
 </code></pre></div></div>
 <p>我们还需要定义一个特殊listener来处理background线程出现异常的时候报的错误</p>
-<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">UnhandledErrorListener</span> <span class="n">errorsListener</span> <span class="o">=</span> <span class="k">new</span> <span class="n">UnhandledErrorListener</span><span class="o">()</span> <span class="o">{</span>
-    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">unhandledError</span><span class="o">(</span><span class="n">String</span> <span class="n">message</span><span class="o">,</span> <span class="n">Throwable</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
-        <span class="n">LOG</span><span class="o">.</span><span class="na">error</span><span class="o">(</span><span class="s">"Unrecoverable error: "</span> <span class="o">+</span> <span class="n">message</span><span class="o">,</span> <span class="n">e</span><span class="o">);</span>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">UnhandledErrorListener</span> <span class="n">errorsListener</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">UnhandledErrorListener</span><span class="o">()</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">unhandledError</span><span class="o">(</span><span class="nc">String</span> <span class="n">message</span><span class="o">,</span> <span class="nc">Throwable</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+        <span class="no">LOG</span><span class="o">.</span><span class="na">error</span><span class="o">(</span><span class="s">"Unrecoverable error: "</span> <span class="o">+</span> <span class="n">message</span><span class="o">,</span> <span class="n">e</span><span class="o">);</span>
         <span class="k">try</span> <span class="o">{</span>
             <span class="n">close</span><span class="o">();</span>
-        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">IOException</span> <span class="n">ioe</span><span class="o">)</span> <span class="o">{</span>
-            <span class="n">LOG</span><span class="o">.</span><span class="na">warn</span><span class="o">(</span> <span class="s">"Exception when closing."</span><span class="o">,</span> <span class="n">ioe</span> <span class="o">);</span>
+        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="nc">IOException</span> <span class="n">ioe</span><span class="o">)</span> <span class="o">{</span>
+            <span class="no">LOG</span><span class="o">.</span><span class="na">warn</span><span class="o">(</span> <span class="s">"Exception when closing."</span><span class="o">,</span> <span class="n">ioe</span> <span class="o">);</span>
         <span class="o">}</span>
     <span class="o">}</span>
 <span class="o">};</span>
@@ -261,7 +261,7 @@
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="/distributed/2018/09/02/zookeeper-curator/" data-title="Zookeeper Curator | 行胜于言" data-tsina="" class="share clearfix">
+	  <div data-url="http://localhost:4000/distributed/2018/09/02/zookeeper-curator/" data-title="Zookeeper Curator | 行胜于言" data-tsina="" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -675,14 +675,14 @@ $(document).ready(function(){
 <!--
 <script type="text/javascript">
 var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
-document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3Fc3cc97040f830d40ad7e7db9ad1875da' type='text/javascript'%3E%3C/script%3E"));
+document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F1ec5d68567dd06f62d35b049a2a89a41' type='text/javascript'%3E%3C/script%3E"));
 </script>
 -->
 <script>
 var _hmt = _hmt || [];
 (function() {
   var hm = document.createElement("script");
-  hm.src = "https://hm.baidu.com/hm.js?c3cc97040f830d40ad7e7db9ad1875da";
+  hm.src = "https://hm.baidu.com/hm.js?1ec5d68567dd06f62d35b049a2a89a41";
   var s = document.getElementsByTagName("script")[0];
   s.parentNode.insertBefore(hm, s);
 })();

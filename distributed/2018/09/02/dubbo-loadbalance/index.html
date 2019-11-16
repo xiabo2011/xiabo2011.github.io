@@ -143,17 +143,17 @@
   </li>
   <li>
     <p>另一种方法是我们实现dubbo的LoadBalance接口，提供一个新的一致哈希实现，我们先看一下dubbo2.8.4的一致性哈希的实现问题在哪。</p>
-    <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="nf">ConsistentHashSelector</span><span class="o">(</span><span class="n">List</span><span class="o">&lt;</span><span class="n">Invoker</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;&gt;</span> <span class="n">invokers</span><span class="o">,</span> <span class="n">String</span> <span class="n">methodName</span><span class="o">,</span> <span class="kt">int</span> <span class="n">identityHashCode</span><span class="o">)</span> <span class="o">{</span>
- <span class="k">this</span><span class="o">.</span><span class="na">virtualInvokers</span> <span class="o">=</span> <span class="k">new</span> <span class="n">TreeMap</span><span class="o">&lt;</span><span class="n">Long</span><span class="o">,</span> <span class="n">Invoker</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;&gt;();</span>
- <span class="k">this</span><span class="o">.</span><span class="na">identityHashCode</span> <span class="o">=</span> <span class="n">System</span><span class="o">.</span><span class="na">identityHashCode</span><span class="o">(</span><span class="n">invokers</span><span class="o">);</span>
- <span class="n">URL</span> <span class="n">url</span> <span class="o">=</span> <span class="n">invokers</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="mi">0</span><span class="o">).</span><span class="na">getUrl</span><span class="o">();</span>
+    <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="nf">ConsistentHashSelector</span><span class="o">(</span><span class="nc">List</span><span class="o">&lt;</span><span class="nc">Invoker</span><span class="o">&lt;</span><span class="no">T</span><span class="o">&gt;&gt;</span> <span class="n">invokers</span><span class="o">,</span> <span class="nc">String</span> <span class="n">methodName</span><span class="o">,</span> <span class="kt">int</span> <span class="n">identityHashCode</span><span class="o">)</span> <span class="o">{</span>
+ <span class="k">this</span><span class="o">.</span><span class="na">virtualInvokers</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">TreeMap</span><span class="o">&lt;</span><span class="nc">Long</span><span class="o">,</span> <span class="nc">Invoker</span><span class="o">&lt;</span><span class="no">T</span><span class="o">&gt;&gt;();</span>
+ <span class="k">this</span><span class="o">.</span><span class="na">identityHashCode</span> <span class="o">=</span> <span class="nc">System</span><span class="o">.</span><span class="na">identityHashCode</span><span class="o">(</span><span class="n">invokers</span><span class="o">);</span>
+ <span class="no">URL</span> <span class="n">url</span> <span class="o">=</span> <span class="n">invokers</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="mi">0</span><span class="o">).</span><span class="na">getUrl</span><span class="o">();</span>
  <span class="k">this</span><span class="o">.</span><span class="na">replicaNumber</span> <span class="o">=</span> <span class="n">url</span><span class="o">.</span><span class="na">getMethodParameter</span><span class="o">(</span><span class="n">methodName</span><span class="o">,</span> <span class="s">"hash.nodes"</span><span class="o">,</span> <span class="mi">160</span><span class="o">);</span>
- <span class="n">String</span><span class="o">[]</span> <span class="n">index</span> <span class="o">=</span> <span class="n">Constants</span><span class="o">.</span><span class="na">COMMA_SPLIT_PATTERN</span><span class="o">.</span><span class="na">split</span><span class="o">(</span><span class="n">url</span><span class="o">.</span><span class="na">getMethodParameter</span><span class="o">(</span><span class="n">methodName</span><span class="o">,</span> <span class="s">"hash.arguments"</span><span class="o">,</span> <span class="s">"0"</span><span class="o">));</span>
+ <span class="nc">String</span><span class="o">[]</span> <span class="n">index</span> <span class="o">=</span> <span class="nc">Constants</span><span class="o">.</span><span class="na">COMMA_SPLIT_PATTERN</span><span class="o">.</span><span class="na">split</span><span class="o">(</span><span class="n">url</span><span class="o">.</span><span class="na">getMethodParameter</span><span class="o">(</span><span class="n">methodName</span><span class="o">,</span> <span class="s">"hash.arguments"</span><span class="o">,</span> <span class="s">"0"</span><span class="o">));</span>
  <span class="n">argumentIndex</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span><span class="o">[</span><span class="n">index</span><span class="o">.</span><span class="na">length</span><span class="o">];</span>
  <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">index</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="n">i</span> <span class="o">++)</span> <span class="o">{</span>
-     <span class="n">argumentIndex</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="n">Integer</span><span class="o">.</span><span class="na">parseInt</span><span class="o">(</span><span class="n">index</span><span class="o">[</span><span class="n">i</span><span class="o">]);</span>
+     <span class="n">argumentIndex</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="nc">Integer</span><span class="o">.</span><span class="na">parseInt</span><span class="o">(</span><span class="n">index</span><span class="o">[</span><span class="n">i</span><span class="o">]);</span>
  <span class="o">}</span>
- <span class="k">for</span> <span class="o">(</span><span class="n">Invoker</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="n">invoker</span> <span class="o">:</span> <span class="n">invokers</span><span class="o">)</span> <span class="o">{</span>
+ <span class="k">for</span> <span class="o">(</span><span class="nc">Invoker</span><span class="o">&lt;</span><span class="no">T</span><span class="o">&gt;</span> <span class="n">invoker</span> <span class="o">:</span> <span class="n">invokers</span><span class="o">)</span> <span class="o">{</span>
      <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">replicaNumber</span> <span class="o">/</span> <span class="mi">4</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
          <span class="kt">byte</span><span class="o">[]</span> <span class="n">digest</span> <span class="o">=</span> <span class="n">md5</span><span class="o">(</span><span class="n">invoker</span><span class="o">.</span><span class="na">getUrl</span><span class="o">().</span><span class="na">toFullString</span><span class="o">()</span> <span class="o">+</span> <span class="n">i</span><span class="o">);</span>
          <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">h</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">h</span> <span class="o">&lt;</span> <span class="mi">4</span><span class="o">;</span> <span class="n">h</span><span class="o">++)</span> <span class="o">{</span>
@@ -172,7 +172,7 @@
 </ol>
 
 <p>源码中的ConsistentHashLoadBalance全部实现保持不变，但我们将类名修改为ConsistentHashLoadBalance2</p>
-<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">ConsistentHashLoadBalance2</span> <span class="kd">extends</span> <span class="n">AbstractLoadBalance</span> <span class="o">{</span>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">ConsistentHashLoadBalance2</span> <span class="kd">extends</span> <span class="nc">AbstractLoadBalance</span> <span class="o">{</span>
 
     <span class="o">...</span>
     
@@ -180,7 +180,7 @@
 </code></pre></div></div>
 <p>然后我们在resources/META-INF/dubbo中定义com.alibaba.dubbo.rpc.cluster.LoadBalance文件，内容为</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>consistenthash2=xxx=com.xxx.ConsistentHashLoadBalance2
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>consistenthash2=xxx=com.xxx.ConsistentHashLoadBalance2
 </code></pre></div></div>
 
 <p>这样只要在consumer侧引入相应的修改，配置loadblance=”consistenthash2”即可。</p>
@@ -224,7 +224,7 @@
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="/distributed/2018/09/02/dubbo-loadbalance/" data-title="Dubbo一致性哈希遇到的坑 | 行胜于言" data-tsina="" class="share clearfix">
+	  <div data-url="http://localhost:4000/distributed/2018/09/02/dubbo-loadbalance/" data-title="Dubbo一致性哈希遇到的坑 | 行胜于言" data-tsina="" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -630,14 +630,14 @@ $(document).ready(function(){
 <!--
 <script type="text/javascript">
 var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
-document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3Fc3cc97040f830d40ad7e7db9ad1875da' type='text/javascript'%3E%3C/script%3E"));
+document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F1ec5d68567dd06f62d35b049a2a89a41' type='text/javascript'%3E%3C/script%3E"));
 </script>
 -->
 <script>
 var _hmt = _hmt || [];
 (function() {
   var hm = document.createElement("script");
-  hm.src = "https://hm.baidu.com/hm.js?c3cc97040f830d40ad7e7db9ad1875da";
+  hm.src = "https://hm.baidu.com/hm.js?1ec5d68567dd06f62d35b049a2a89a41";
   var s = document.getElementsByTagName("script")[0];
   s.parentNode.insertBefore(hm, s);
 })();

@@ -131,32 +131,32 @@
 		
 		<h2 id="zookeeper-session">Zookeeper session</h2>
 <p>Zookeeper client通过创建一个session与Zookeeper server通信，如果与某一台server的连接断了，session会转移到与另一台server建立的连接。通过org.apache.zookeeper.Zookeeper类构建zookeeper session</p>
-<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">Zookeeper</span><span class="o">(</span>
-    <span class="n">String</span> <span class="n">connectString</span><span class="o">,</span>   <span class="c1">// servers address e.g.: "127.0.0.1:2181,127.0.0.1:2182,127.0.0.1:2183"</span>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">Zookeeper</span><span class="o">(</span>
+    <span class="nc">String</span> <span class="n">connectString</span><span class="o">,</span>   <span class="c1">// servers address e.g.: "127.0.0.1:2181,127.0.0.1:2182,127.0.0.1:2183"</span>
     <span class="kt">int</span> <span class="n">sessionTimeout</span><span class="o">,</span>     <span class="c1">// session timeout in millisecond</span>
-    <span class="n">Watcher</span> <span class="n">watcher</span>         <span class="c1">// 用来接收session event, watcher是接口，需要传递一个实现接口的实例化object</span>
+    <span class="nc">Watcher</span> <span class="n">watcher</span>         <span class="c1">// 用来接收session event, watcher是接口，需要传递一个实现接口的实例化object</span>
 <span class="o">)</span>
 </code></pre></div></div>
 
 <p>为了能够接收zookeeper的通知，需要实现Watcher类，代码如下</p>
-<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Master</span> <span class="kd">implements</span> <span class="n">Watcher</span> <span class="o">{</span>
-    <span class="kd">private</span> <span class="n">ZooKeeper</span> <span class="n">zk</span><span class="o">;</span>
-    <span class="kd">private</span> <span class="n">String</span> <span class="n">hostPort</span><span class="o">;</span>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Master</span> <span class="kd">implements</span> <span class="nc">Watcher</span> <span class="o">{</span>
+    <span class="kd">private</span> <span class="nc">ZooKeeper</span> <span class="n">zk</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="nc">String</span> <span class="n">hostPort</span><span class="o">;</span>
     <span class="kd">private</span> <span class="kd">volatile</span> <span class="kt">boolean</span> <span class="n">connected</span> <span class="o">=</span> <span class="kc">false</span><span class="o">;</span>
     <span class="kd">private</span> <span class="kd">volatile</span> <span class="kt">boolean</span> <span class="n">expired</span> <span class="o">=</span> <span class="kc">false</span><span class="o">;</span>
     
-    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">startZK</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="o">{</span>
-        <span class="n">zk</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ZooKeeper</span><span class="o">(</span><span class="n">hostPort</span><span class="o">,</span> <span class="mi">10000</span><span class="o">,</span> <span class="k">this</span><span class="o">);</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">startZK</span><span class="o">()</span> <span class="kd">throws</span> <span class="nc">IOException</span> <span class="o">{</span>
+        <span class="n">zk</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">ZooKeeper</span><span class="o">(</span><span class="n">hostPort</span><span class="o">,</span> <span class="mi">10000</span><span class="o">,</span> <span class="k">this</span><span class="o">);</span>
     <span class="o">}</span>
     
-    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">stopZK</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">InterruptedException</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">stopZK</span><span class="o">()</span> <span class="kd">throws</span> <span class="nc">InterruptedException</span> <span class="o">{</span>
         <span class="n">zk</span><span class="o">.</span><span class="na">close</span><span class="o">();</span>
     <span class="o">}</span>
     
     <span class="nd">@Override</span>
-    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">process</span><span class="o">(</span><span class="n">WatchedEvent</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">process</span><span class="o">(</span><span class="nc">WatchedEvent</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
         <span class="n">logger</span><span class="o">.</span><span class="na">info</span><span class="o">(</span><span class="s">"Master processing event: {}"</span><span class="o">,</span> <span class="n">e</span><span class="o">.</span><span class="na">toString</span><span class="o">());</span>
-        <span class="k">if</span> <span class="o">(</span><span class="n">e</span><span class="o">.</span><span class="na">getType</span><span class="o">()</span> <span class="o">==</span> <span class="n">Event</span><span class="o">.</span><span class="na">EventType</span><span class="o">.</span><span class="na">None</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">e</span><span class="o">.</span><span class="na">getType</span><span class="o">()</span> <span class="o">==</span> <span class="nc">Event</span><span class="o">.</span><span class="na">EventType</span><span class="o">.</span><span class="na">None</span><span class="o">)</span> <span class="o">{</span>
             <span class="k">switch</span> <span class="o">(</span><span class="n">e</span><span class="o">.</span><span class="na">getState</span><span class="o">())</span> <span class="o">{</span>
                 <span class="k">case</span> <span class="nl">SyncConnected:</span>
                     <span class="n">connected</span> <span class="o">=</span> <span class="kc">true</span><span class="o">;</span>
@@ -197,20 +197,20 @@ None表示WatchEvent用来记录zk session的状态变化</li>
 下面是 <em>/master</em> znode创建的代码举例。</p>
 
 <p>同步调用<strong><em>create</em></strong></p>
-<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="kd">private</span> <span class="kt">boolean</span> <span class="nf">checkMaster</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">InterruptedException</span> <span class="o">{</span>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="kd">private</span> <span class="kt">boolean</span> <span class="nf">checkMaster</span><span class="o">()</span> <span class="kd">throws</span> <span class="nc">InterruptedException</span> <span class="o">{</span>
         <span class="c1">// Logic for checking /master created correctly</span>
     <span class="o">}</span>
 
-    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">createMaster</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">InterruptedException</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">createMaster</span><span class="o">()</span> <span class="kd">throws</span> <span class="nc">InterruptedException</span> <span class="o">{</span>
         <span class="k">while</span> <span class="o">(</span><span class="kc">true</span><span class="o">)</span> <span class="o">{</span>
             <span class="k">try</span> <span class="o">{</span>
-                <span class="n">zk</span><span class="o">.</span><span class="na">create</span><span class="o">(</span><span class="s">"/master"</span><span class="o">,</span> <span class="s">"masterData"</span><span class="o">.</span><span class="na">getBytes</span><span class="o">(),</span> <span class="n">ZooDefs</span><span class="o">.</span><span class="na">Ids</span><span class="o">.</span><span class="na">OPEN_ACL_UNSAFE</span><span class="o">,</span> <span class="n">CreateMode</span><span class="o">.</span><span class="na">EPHEMERAL</span><span class="o">);</span>
+                <span class="n">zk</span><span class="o">.</span><span class="na">create</span><span class="o">(</span><span class="s">"/master"</span><span class="o">,</span> <span class="s">"masterData"</span><span class="o">.</span><span class="na">getBytes</span><span class="o">(),</span> <span class="nc">ZooDefs</span><span class="o">.</span><span class="na">Ids</span><span class="o">.</span><span class="na">OPEN_ACL_UNSAFE</span><span class="o">,</span> <span class="nc">CreateMode</span><span class="o">.</span><span class="na">EPHEMERAL</span><span class="o">);</span>
                 <span class="n">isLeader</span> <span class="o">=</span> <span class="kc">true</span><span class="o">;</span>
                 <span class="k">break</span><span class="o">;</span>
-            <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">KeeperException</span><span class="o">.</span><span class="na">NodeExistsException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+            <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="nc">KeeperException</span><span class="o">.</span><span class="na">NodeExistsException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
                 <span class="n">isLeader</span> <span class="o">=</span> <span class="kc">false</span><span class="o">;</span>
                 <span class="k">break</span><span class="o">;</span>
-            <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">KeeperException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+            <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="nc">KeeperException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
                 <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
             <span class="o">}</span>
             <span class="k">if</span> <span class="o">(</span><span class="n">checkMaster</span><span class="o">())</span> <span class="o">{</span>
@@ -221,20 +221,20 @@ None表示WatchEvent用来记录zk session的状态变化</li>
 </code></pre></div></div>
 <p>异步调用<strong><em>create</em></strong></p>
 <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">createMasterAsync</span><span class="o">()</span> <span class="o">{</span>
-        <span class="n">zk</span><span class="o">.</span><span class="na">create</span><span class="o">(</span><span class="s">"/master"</span><span class="o">,</span> <span class="s">"masterData"</span><span class="o">.</span><span class="na">getBytes</span><span class="o">(),</span> <span class="n">ZooDefs</span><span class="o">.</span><span class="na">Ids</span><span class="o">.</span><span class="na">OPEN_ACL_UNSAFE</span><span class="o">,</span> <span class="n">CreateMode</span><span class="o">.</span><span class="na">EPHEMERAL</span><span class="o">,</span> <span class="n">masterCreateCallback</span><span class="o">,</span> <span class="kc">null</span><span class="o">);</span>
+        <span class="n">zk</span><span class="o">.</span><span class="na">create</span><span class="o">(</span><span class="s">"/master"</span><span class="o">,</span> <span class="s">"masterData"</span><span class="o">.</span><span class="na">getBytes</span><span class="o">(),</span> <span class="nc">ZooDefs</span><span class="o">.</span><span class="na">Ids</span><span class="o">.</span><span class="na">OPEN_ACL_UNSAFE</span><span class="o">,</span> <span class="nc">CreateMode</span><span class="o">.</span><span class="na">EPHEMERAL</span><span class="o">,</span> <span class="n">masterCreateCallback</span><span class="o">,</span> <span class="kc">null</span><span class="o">);</span>
     <span class="o">}</span>
 
-    <span class="kd">private</span> <span class="n">AsyncCallback</span><span class="o">.</span><span class="na">StringCallback</span> <span class="n">masterCreateCallback</span> <span class="o">=</span> <span class="k">new</span> <span class="n">AsyncCallback</span><span class="o">.</span><span class="na">StringCallback</span><span class="o">()</span> <span class="o">{</span>
+    <span class="kd">private</span> <span class="nc">AsyncCallback</span><span class="o">.</span><span class="na">StringCallback</span> <span class="n">masterCreateCallback</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">AsyncCallback</span><span class="o">.</span><span class="na">StringCallback</span><span class="o">()</span> <span class="o">{</span>
         <span class="nd">@Override</span>
-        <span class="kd">public</span> <span class="kt">void</span> <span class="nf">processResult</span><span class="o">(</span><span class="kt">int</span> <span class="n">rc</span><span class="o">,</span> <span class="n">String</span> <span class="n">path</span><span class="o">,</span> <span class="n">Object</span> <span class="n">ctx</span><span class="o">,</span> <span class="n">String</span> <span class="n">name</span><span class="o">)</span> <span class="o">{</span>
-            <span class="k">switch</span> <span class="o">(</span><span class="n">KeeperException</span><span class="o">.</span><span class="na">Code</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">rc</span><span class="o">))</span> <span class="o">{</span>
+        <span class="kd">public</span> <span class="kt">void</span> <span class="nf">processResult</span><span class="o">(</span><span class="kt">int</span> <span class="n">rc</span><span class="o">,</span> <span class="nc">String</span> <span class="n">path</span><span class="o">,</span> <span class="nc">Object</span> <span class="n">ctx</span><span class="o">,</span> <span class="nc">String</span> <span class="n">name</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">switch</span> <span class="o">(</span><span class="nc">KeeperException</span><span class="o">.</span><span class="na">Code</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">rc</span><span class="o">))</span> <span class="o">{</span>
                 <span class="k">case</span> <span class="nl">OK:</span>
-                    <span class="n">status</span> <span class="o">=</span> <span class="n">Status</span><span class="o">.</span><span class="na">ELECTED</span><span class="o">;</span>
+                    <span class="n">status</span> <span class="o">=</span> <span class="nc">Status</span><span class="o">.</span><span class="na">ELECTED</span><span class="o">;</span>
                     <span class="n">takeLeadership</span><span class="o">();</span>
                     <span class="n">logger</span><span class="o">.</span><span class="na">info</span><span class="o">(</span><span class="s">"I'm the leader"</span><span class="o">);</span>
                     <span class="k">break</span><span class="o">;</span>
                 <span class="k">case</span> <span class="nl">NODEEXISTS:</span>
-                    <span class="n">status</span> <span class="o">=</span> <span class="n">Status</span><span class="o">.</span><span class="na">NOT_ELECTED</span><span class="o">;</span>
+                    <span class="n">status</span> <span class="o">=</span> <span class="nc">Status</span><span class="o">.</span><span class="na">NOT_ELECTED</span><span class="o">;</span>
                     <span class="n">masterExistsAsync</span><span class="o">();</span>
                     <span class="k">break</span><span class="o">;</span>
                 <span class="k">case</span> <span class="nl">CONNECTIONLOSS:</span>
@@ -242,8 +242,8 @@ None表示WatchEvent用来记录zk session的状态变化</li>
                     <span class="n">checkMasterAsync</span><span class="o">();</span>
                     <span class="k">break</span><span class="o">;</span>
                 <span class="k">default</span><span class="o">:</span>
-                    <span class="n">status</span> <span class="o">=</span> <span class="n">Status</span><span class="o">.</span><span class="na">NOT_ELECTED</span><span class="o">;</span>
-                    <span class="n">logger</span><span class="o">.</span><span class="na">error</span><span class="o">(</span><span class="s">"'create' failed"</span><span class="o">,</span> <span class="n">KeeperException</span><span class="o">.</span><span class="na">create</span><span class="o">(</span><span class="n">KeeperException</span><span class="o">.</span><span class="na">Code</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">rc</span><span class="o">),</span> <span class="n">path</span><span class="o">));</span>
+                    <span class="n">status</span> <span class="o">=</span> <span class="nc">Status</span><span class="o">.</span><span class="na">NOT_ELECTED</span><span class="o">;</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="na">error</span><span class="o">(</span><span class="s">"'create' failed"</span><span class="o">,</span> <span class="nc">KeeperException</span><span class="o">.</span><span class="na">create</span><span class="o">(</span><span class="nc">KeeperException</span><span class="o">.</span><span class="na">Code</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">rc</span><span class="o">),</span> <span class="n">path</span><span class="o">));</span>
             <span class="o">}</span>
         <span class="o">}</span>
     <span class="o">};</span>
@@ -263,30 +263,30 @@ None表示WatchEvent用来记录zk session的状态变化</li>
         <span class="n">zk</span><span class="o">.</span><span class="na">exists</span><span class="o">(</span><span class="s">"/master"</span><span class="o">,</span> <span class="n">masterExistsWatcher</span><span class="o">,</span> <span class="n">masterExistsCallback</span><span class="o">,</span> <span class="kc">null</span><span class="o">);</span>
     <span class="o">}</span>
 
-    <span class="kd">private</span> <span class="n">Watcher</span> <span class="n">masterExistsWatcher</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Watcher</span><span class="o">()</span> <span class="o">{</span>
+    <span class="kd">private</span> <span class="nc">Watcher</span> <span class="n">masterExistsWatcher</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Watcher</span><span class="o">()</span> <span class="o">{</span>
         <span class="nd">@Override</span>
-        <span class="kd">public</span> <span class="kt">void</span> <span class="nf">process</span><span class="o">(</span><span class="n">WatchedEvent</span> <span class="n">event</span><span class="o">)</span> <span class="o">{</span>
-            <span class="k">if</span> <span class="o">(</span><span class="n">event</span><span class="o">.</span><span class="na">getType</span><span class="o">()</span> <span class="o">==</span> <span class="n">Event</span><span class="o">.</span><span class="na">EventType</span><span class="o">.</span><span class="na">NodeDeleted</span><span class="o">)</span> <span class="o">{</span>
+        <span class="kd">public</span> <span class="kt">void</span> <span class="nf">process</span><span class="o">(</span><span class="nc">WatchedEvent</span> <span class="n">event</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">if</span> <span class="o">(</span><span class="n">event</span><span class="o">.</span><span class="na">getType</span><span class="o">()</span> <span class="o">==</span> <span class="nc">Event</span><span class="o">.</span><span class="na">EventType</span><span class="o">.</span><span class="na">NodeDeleted</span><span class="o">)</span> <span class="o">{</span>
                 <span class="k">assert</span> <span class="s">"/master"</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="n">event</span><span class="o">.</span><span class="na">getPath</span><span class="o">());</span>
                 <span class="n">createMasterAsync</span><span class="o">();</span>
             <span class="o">}</span>
         <span class="o">}</span>
     <span class="o">};</span>
 
-    <span class="kd">private</span> <span class="n">AsyncCallback</span><span class="o">.</span><span class="na">StatCallback</span> <span class="n">masterExistsCallback</span> <span class="o">=</span> <span class="k">new</span> <span class="n">AsyncCallback</span><span class="o">.</span><span class="na">StatCallback</span><span class="o">()</span> <span class="o">{</span>
+    <span class="kd">private</span> <span class="nc">AsyncCallback</span><span class="o">.</span><span class="na">StatCallback</span> <span class="n">masterExistsCallback</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">AsyncCallback</span><span class="o">.</span><span class="na">StatCallback</span><span class="o">()</span> <span class="o">{</span>
         <span class="nd">@Override</span>
-        <span class="kd">public</span> <span class="kt">void</span> <span class="nf">processResult</span><span class="o">(</span><span class="kt">int</span> <span class="n">rc</span><span class="o">,</span> <span class="n">String</span> <span class="n">path</span><span class="o">,</span> <span class="n">Object</span> <span class="n">ctx</span><span class="o">,</span> <span class="n">Stat</span> <span class="n">stat</span><span class="o">)</span> <span class="o">{</span>
-            <span class="k">switch</span> <span class="o">(</span><span class="n">KeeperException</span><span class="o">.</span><span class="na">Code</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">rc</span><span class="o">))</span> <span class="o">{</span>
+        <span class="kd">public</span> <span class="kt">void</span> <span class="nf">processResult</span><span class="o">(</span><span class="kt">int</span> <span class="n">rc</span><span class="o">,</span> <span class="nc">String</span> <span class="n">path</span><span class="o">,</span> <span class="nc">Object</span> <span class="n">ctx</span><span class="o">,</span> <span class="nc">Stat</span> <span class="n">stat</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">switch</span> <span class="o">(</span><span class="nc">KeeperException</span><span class="o">.</span><span class="na">Code</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">rc</span><span class="o">))</span> <span class="o">{</span>
                 <span class="k">case</span> <span class="nl">OK:</span>
                     <span class="n">looger</span><span class="o">.</span><span class="na">info</span><span class="o">(</span><span class="s">"
                     break;
                 case CONNECTIONLOSS:
-                    logger.warn("</span><span class="n">Connection</span> <span class="n">Loss</span><span class="s">");
+                    logger.warn("</span><span class="nc">Connection</span> <span class="nc">Loss</span><span class="s">");
                     masterExistsA();
                     break;
                 case NONODE:
                     createMasterAsync();
-                    logger.warn("</span><span class="n">Previous</span> <span class="n">master</span> <span class="n">is</span> <span class="n">gone</span><span class="o">,</span> <span class="n">run</span> <span class="k">for</span> <span class="k">new</span> <span class="n">master</span><span class="err">"</span><span class="o">);</span>
+                    logger.warn("</span><span class="nc">Previous</span> <span class="n">master</span> <span class="n">is</span> <span class="n">gone</span><span class="o">,</span> <span class="n">run</span> <span class="k">for</span> <span class="k">new</span> <span class="n">master</span><span class="err">"</span><span class="o">);</span>
                 <span class="k">default</span><span class="o">:</span>
                     <span class="n">checkMasterAsync</span><span class="o">();</span>
                     <span class="k">break</span><span class="o">;</span>
@@ -334,7 +334,7 @@ None表示WatchEvent用来记录zk session的状态变化</li>
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="/distributed/2018/08/26/zookeeper-api/" data-title="Zookeeper API使用 | 行胜于言" data-tsina="" class="share clearfix">
+	  <div data-url="http://localhost:4000/distributed/2018/08/26/zookeeper-api/" data-title="Zookeeper API使用 | 行胜于言" data-tsina="" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -748,14 +748,14 @@ $(document).ready(function(){
 <!--
 <script type="text/javascript">
 var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
-document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3Fc3cc97040f830d40ad7e7db9ad1875da' type='text/javascript'%3E%3C/script%3E"));
+document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F1ec5d68567dd06f62d35b049a2a89a41' type='text/javascript'%3E%3C/script%3E"));
 </script>
 -->
 <script>
 var _hmt = _hmt || [];
 (function() {
   var hm = document.createElement("script");
-  hm.src = "https://hm.baidu.com/hm.js?c3cc97040f830d40ad7e7db9ad1875da";
+  hm.src = "https://hm.baidu.com/hm.js?1ec5d68567dd06f62d35b049a2a89a41";
   var s = document.getElementsByTagName("script")[0];
   s.parentNode.insertBefore(hm, s);
 })();

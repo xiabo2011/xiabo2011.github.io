@@ -11,10 +11,10 @@
 /sitemap.txt
 /assets/css/style.css
 
-/distributed/2018/09/02/dubbo-loadbalance/
-/distributed/2018/09/02/zookeeper-curator/
-/distributed/2018/08/26/zookeeper-api/
-/blockchain/2018/06/30/first-smart-contract/
-/blockchain/2018/06/30/local-private-ethereum/
-/distributed/2018/06/03/zookeeper-basics/
-/distributed/2018/06/02/zookeeper-getting-started/
+http://localhost:4000/distributed/2018/09/02/dubbo-loadbalance/
+http://localhost:4000/distributed/2018/09/02/zookeeper-curator/
+http://localhost:4000/distributed/2018/08/26/zookeeper-api/
+http://localhost:4000/blockchain/2018/06/30/first-smart-contract/
+http://localhost:4000/blockchain/2018/06/30/local-private-ethereum/
+http://localhost:4000/distributed/2018/06/03/zookeeper-basics/
+http://localhost:4000/distributed/2018/06/02/zookeeper-getting-started/
